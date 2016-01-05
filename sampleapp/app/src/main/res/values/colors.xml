@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="indoor_location_off">#8b8b8b</color>
+    <color name="indoor_location_failed">#ff4043</color>
+    <color name="indoor_location_on">#8bff8f</color>
+
+    <color name="logTextColor">#252525</color>
+
+    <color name="log_bg">#80a5c4e1</color>
+
+    <color name="red">#4285F4</color>
+</resources>

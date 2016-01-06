@@ -75,7 +75,7 @@ There are two callback methods in the delegate's interface that handle `start()`
 
 To stop indoor location simply call:
 
-	mIndoorLocalizationManager.stop();
+	mIndoorLocationManager.stop();
 	
 This method stops the bluetooth monitoring related to Indoor Location.
 

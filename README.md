@@ -22,9 +22,6 @@ To use the library in an Android Studio project simply add:
 
 	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:1.0.0@aar') {
         transitive = true }
-    compile('com.google.android.gms:play-services:7.8.+') {
-        transitive = true
-    }
 
 to your project dependencies and run gradle build.
 

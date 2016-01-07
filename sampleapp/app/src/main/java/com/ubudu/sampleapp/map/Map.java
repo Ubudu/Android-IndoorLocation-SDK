@@ -328,6 +328,12 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
     @Override
     public void bearing(float bearing) {
         currentCompassBearing = bearing;
+        if(mGoogleMap!=null && currentLocation!=null) {
+            synchronized (mGoogleMap) {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder(mGoogleMap.getCameraPosition())
+                        .bearing(currentCompassBearing).build()));
+            }
+        }
     }
 
     private class LoadMapOverlayFromUrlTask extends AsyncTask<Void, Integer, Void> {
@@ -607,14 +613,16 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
     }
 
     private void updateCamera() {
-        if (mGoogleMap.getCameraPosition().zoom < DEFAULT_MAP_ZOOM) {
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                    .target(currentLocation)
-                    .bearing(currentCompassBearing).zoom(DEFAULT_MAP_ZOOM).build()));
-        } else {
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                    .target(currentLocation)
-                    .bearing(currentCompassBearing).zoom(mGoogleMap.getCameraPosition().zoom).build()));
+        synchronized (mGoogleMap) {
+            if (mGoogleMap.getCameraPosition().zoom < DEFAULT_MAP_ZOOM) {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                        .target(currentLocation)
+                        .zoom(DEFAULT_MAP_ZOOM).build()));
+            } else {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                        .target(currentLocation)
+                        .zoom(mGoogleMap.getCameraPosition().zoom).build()));
+            }
         }
     }
 

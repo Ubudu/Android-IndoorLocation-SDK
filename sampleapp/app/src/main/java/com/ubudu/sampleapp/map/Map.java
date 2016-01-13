@@ -50,7 +50,7 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
 
     private static final long OVERLAY_VALID_TIMEOUT_MILLIS = 30 * 60 * 1000;
     private static final double OVERLAY_DOWNSCALE_FACTOR = 0.5;
-    private int DEFAULT_MAP_ZOOM = 19;
+    private int DEFAULT_MAP_ZOOM = 17;
     private final String MAP_FILE_NAME = "mapoverlay";
     private final long ANIMATE_POSITION_CHANGE_DURATION = 500; // ms
     private int INITIAL_IN_SAMPLE_SIZE_FOR_BITMAP_COMPRESSION = 1;
@@ -328,12 +328,12 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
     @Override
     public void bearing(float bearing) {
         currentCompassBearing = bearing;
-        if(mGoogleMap!=null && currentLocation!=null) {
-            synchronized (mGoogleMap) {
-                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder(mGoogleMap.getCameraPosition())
-                        .bearing(currentCompassBearing).build()));
-            }
-        }
+//        if(mGoogleMap!=null && currentLocation!=null) {
+//            synchronized (mGoogleMap) {
+//                mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder(mGoogleMap.getCameraPosition())
+//                        .bearing(currentCompassBearing).build()));
+//            }
+//        }
     }
 
     private class LoadMapOverlayFromUrlTask extends AsyncTask<Void, Integer, Void> {

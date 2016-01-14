@@ -20,7 +20,7 @@ More docs about using the Indoor Location SDK can be found in the Ubudu Knowledg
 
 To use the library in an Android Studio project simply add:
 
-	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:1.0.0@aar') {
+	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:1.0.1@aar') {
         transitive = true }
 
 to your project dependencies and run gradle build.

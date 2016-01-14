@@ -1,4 +1,4 @@
-# Android-IndoorLocation-SDK - version 1.0.0
+# Android-IndoorLocation-SDK - version 1.0.1
 
 ## Ubudu Indoor Location SDK for Android
 

@@ -103,6 +103,12 @@ This method stops the bluetooth monitoring related to Indoor Location.
 <td align="left">MG</td>
 <td align="left">Created.</td>
 </tr>
+<tr class="odd">
+<td align="left">1.0.1</td>
+<td align="left">2016-01-14</td>
+<td align="left">MG</td>
+<td align="left">Changed public API pattern so the methods parameters names are understandable.</td>
+</tr>
 </tbody>
 </table>
 

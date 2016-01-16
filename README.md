@@ -1,4 +1,4 @@
-# Android-IndoorLocation-SDK - version 1.0.1
+# Android-IndoorLocation-SDK - version 1.0.2
 
 ## Ubudu Indoor Location SDK for Android
 
@@ -20,7 +20,7 @@ More docs about using the Indoor Location SDK can be found in the Ubudu Knowledg
 
 To use the library in an Android Studio project simply add:
 
-	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:1.0.1@aar') {
+	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:1.0.2@aar') {
         transitive = true }
 
 to your project dependencies and run gradle build.
@@ -108,6 +108,16 @@ This method stops the bluetooth monitoring related to Indoor Location.
 <td align="left">2016-01-14</td>
 <td align="left">MG</td>
 <td align="left">Changed public API pattern so the methods parameters names are understandable.</td>
+</tr>
+<tr class="odd">
+<td align="left">1.0.2</td>
+<td align="left">2016-01-16</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Issues addressed:</p>
+<ul><li>fixed crashes which were happening if zones were not properly defined on the map,</li>
+<li>fixed a crash happening when the UbuduIndoorLocationDelegate instance has not been set and is null in the UbuduIndoorLocationManager.</li></ul>
+</td>
 </tr>
 </tbody>
 </table>

@@ -115,7 +115,7 @@ This method stops the bluetooth monitoring related to Indoor Location.
 <td align="left">MG</td>
 <td align="left">
 <p>Issues addressed:</p>
-<ul><li>fixed crashes which were happening if zones were not properly defined on the map,</li>
+<ul><li>* fixed crashes which were happening if the current position was pointed inside all of the zones defined on the map,</li>
 <li>fixed a crash happening when the UbuduIndoorLocationDelegate instance has not been set and is null in the UbuduIndoorLocationManager.</li></ul>
 </td>
 </tr>

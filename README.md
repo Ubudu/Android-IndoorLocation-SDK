@@ -20,7 +20,7 @@ More docs about using the Indoor Location SDK can be found in the Ubudu Knowledg
 
 To use the library in an Android Studio project simply add:
 
-	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:1.0.2@aar') {
+	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.1.0@aar') {
         transitive = true }
 
 to your project dependencies and run gradle build.
@@ -46,32 +46,50 @@ The delegate object must be then passed to the indoor location manager:
 
 	mIndoorLocationManager.setIndoorLocationDelegate(mIndoorLocationDelegate);
 	
-To use indoor location a map must be provided. Map it must be first created in the online Ubudu manager platform. To create and configure a map:
+To use indoor location an Ubudu Application must be first defined in the Manager Platform. The namespace uid must be then provided at the SDK initialization stage. To create an Indoor Location application please do the following:
 
--   go on the Ubudu manager platform,
+- 	go to the Ubudu Manager Platform ([http://manager.ubudu.com]()),
    
--   select a venue in Venues & indoor maps,
-   
--	add new venue or go to the details of one of available venues,
+-   open details of one of the available venues (or create a new one) in `Venues & indoor maps ` section,
 
--	click on the Maps button and click Add,
+-	click on the `Maps` button and click `Add`,
 
--	configure and save all the map's information.
+-	configure and save all the map's information according to the map creation tool,
 
-Once the map creation process is completed the uuid (key) of the map is used by the mobile application. To download the map in the application its uuid must be given as an argument to the following method of `UbuduIndoorLocationManager`, for example:
+- 	when your maps are ready go to the `Applications` section,
 
-	mIndoorLocalizationManager.loadMapWithKey("0c6e343044640133cedd1ad861f40fb6");
+-	choose one of the applications and edit it,
 
-After calling the method above the map's data will be automatically downloaded from the Ubudu manager platform at the SDK start. To start the Indoor Location `start()` must be called:
+-	go to the bottom of the edit page till you see `Indoor Location venues` section where you can add venues that have been created on your account to the application,
 
-	mIndoorLocationManager.start();
+-	press `Update Application` button to save your changes.
 
-There are two callback methods in the delegate's interface that handle `start()` result:
+Once the application is ready its uid (namespace) is used by the mobile SDK to fetch all data and start indoor positioning. To plug the application to the Indoor Location SDK within your mobile app please to the following: 
 
-	void startSucceed();
-	void startFailed();
+	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a9002cde");
+
+After calling the method above the application's data will be automatically downloaded from the Ubudu Manager Platform. To start the Indoor Location `start()` must be called:
+
+	mIndoorLocationManager.start(new UbuduStartCallback() {
 	
-`startFailed()` is called when Indoor Location could not be started because of the network connection problems or corrupted map json file. `startSucceed()` is called when Indoor Location has been started successfully. Location events will be automatically passed to proper the delegate's methods. 
+                @Override
+                public void success() {
+                    // SDK started
+                }
+
+                @Override
+                public void failure() {
+                    // SDK start failure
+                }
+
+                @Override
+                public void restartedAfterContentAutoUpdated() {
+                    // SDK restarted after remote data auto-update
+                }
+                
+            });
+            	
+`failure()` callback is called when Indoor Location could not be started because of the network connection problems or corrupted map json file. `success()` callback is called when Indoor Location has been started successfully. Location events will be automatically passed to proper the delegate's methods. 
 
 To stop indoor location simply call:
 
@@ -117,6 +135,22 @@ This method stops the bluetooth monitoring related to Indoor Location.
 <p>Issues addressed:</p>
 <ul><li>fixed crashes which were happening if the current position was pointed inside all of the zones defined on the map,</li>
 <li>fixed a crash happening when the UbuduIndoorLocationDelegate instance has not been set and is null in the UbuduIndoorLocationManager.</li></ul>
+</td>
+</tr>
+<tr class="odd">
+<td align="left">2.1.0</td>
+<td align="left">2016-02-15</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul><li>automatic floors switching,</li>
+<li>remote content auto-update,</li>
+<li>API method allowing to choose if map overlays .png files should be fetched,</li>
+<li>API method to choose between using rectified or non-rectified indoor maps.</li></ul>
+<p>Improvements:</p>
+<ul><li>improved motion filtering to improve positioning stability.</li></ul>
+<p>Issues addressed:</p>
+<ul><li>improved stability when working with other Ubudu SDKs using beacon monitoring.</li></ul>
 </td>
 </tr>
 </tbody>

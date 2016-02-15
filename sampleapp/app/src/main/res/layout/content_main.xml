@@ -28,7 +28,7 @@
             android:transcriptMode="alwaysScroll"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:alpha="0.6"
+            android:alpha="0.8"
             android:background="@color/log_bg"
             android:layout_margin="10dp" />
 

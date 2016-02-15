@@ -7,10 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -31,31 +31,21 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.ubudu.indoorlocation.UbuduBeacon;
-import com.ubudu.sampleapp.map.network.HttpDownloader;
-import com.ubudu.sampleapp.map.network.InputStreamWithContentLength;
 import com.ubudu.sampleapp.map.storage.AppFileSystemUtil;
-import com.ubudu.sampleapp.map.storage.WriteInputStreamToFileProgressListener;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.BearingListener {
 
-    private static final long OVERLAY_VALID_TIMEOUT_MILLIS = 30 * 60 * 1000;
-    private static final double OVERLAY_DOWNSCALE_FACTOR = 0.5;
-    private int DEFAULT_MAP_ZOOM = 17;
+    private int DEFAULT_MAP_ZOOM = 19;
     private final String MAP_FILE_NAME = "mapoverlay";
     private final long ANIMATE_POSITION_CHANGE_DURATION = 500; // ms
     private int INITIAL_IN_SAMPLE_SIZE_FOR_BITMAP_COMPRESSION = 1;
-
-    private boolean googleMapReady = false;
 
     private long mapOverlayTimeStamp = -1;
 
@@ -81,9 +71,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
 
     private Context mContext;
 
-    private String mapUrl = "";
-    private String assetsMapFileName = "";
-
     private AppFileSystemUtil mAppFileSystemUtil;
 
     private MapMarkers markers;
@@ -91,6 +78,10 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
     private float currentCompassBearing;
 
     private MapBearingManager mMapRotationSensorManager;
+
+    private String overlayUuid;
+
+    private Marker clickedPositionMarker;
 
     /**
      * Constructor
@@ -211,6 +202,7 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
 
     private void addNewActiveBeaconsMarkers(List<UbuduBeacon> activeBeaconsPositions) {
         try {
+            int numGreen = 0;
             Iterator<UbuduBeacon> newActiveBeaconsPositionsIter = activeBeaconsPositions.iterator();
             while (newActiveBeaconsPositionsIter.hasNext()) {
                 UbuduBeacon b = newActiveBeaconsPositionsIter.next();
@@ -219,9 +211,10 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
                         String title = "major: " + b.major() + ", minor: " + b.minor();
 
                         BitmapDescriptor iconBitmapDescriptor;
-                        if (b.accuracy() < 15.0)
+                        if (b.accuracy() < 13.0 && numGreen<4) {
                             iconBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(markers.greenMarkerBitmap);
-                        else
+                            numGreen++;
+                        } else
                             iconBitmapDescriptor = BitmapDescriptorFactory.fromBitmap(markers.beaconMarkerBitmap);
 
                         if (activeBeaconsMarkers == null)
@@ -312,6 +305,14 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
             }
     }
 
+    public boolean isMapOverlayLoaded(){
+        if(mGroundOverlay!=null || overlayUuid!=null){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void removeGroundOverlay() {
         if (mGroundOverlay != null)
             mGroundOverlay.remove();
@@ -330,206 +331,96 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
         currentCompassBearing = bearing;
     }
 
-    private class LoadMapOverlayFromUrlTask extends AsyncTask<Void, Integer, Void> {
+    public void initMapOverlayFromInputStream(InputStream mapOverlayInputStream) {
+        if(mapOverlayInputStream!=null) {
+            try {
+                writeInputStreamToFile(mapOverlayInputStream);
+                mapOverlayInputStream.close();
+                putMapOverlay(INITIAL_IN_SAMPLE_SIZE_FOR_BITMAP_COMPRESSION);
+            } catch(Exception e){
 
-        HttpDownloader mHttpDownloader;
+            }
+        }
+    }
 
-        WriteInputStreamToFileProgressListener mapFetchListener = new WriteInputStreamToFileProgressListener() {
+    private void writeInputStreamToFile(InputStream in){
+        try{
+            mAppFileSystemUtil.writeInputStreamToFile(in, MAP_FILE_NAME, in.available(), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void putMapOverlay(final int inSampleSize) {
+        new Thread(new Runnable() {
             @Override
-            public void publishFileWritingProgress(int progress) {
-                publishProgress(progress);
+            public void run() {
+                tryToPutOverlay(inSampleSize);
             }
-        };
 
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            if (mAppFileSystemUtil.fileExists(MAP_FILE_NAME) && mapOverlayTimeStamp > System.currentTimeMillis() - Map.OVERLAY_VALID_TIMEOUT_MILLIS) {
-                putMapOverlay();
-            } else {
-                boolean fileDownloadSuccess = downloadAndSaveBitmapFile();
-                if (fileDownloadSuccess) {
-                    mapOverlayTimeStamp = System.currentTimeMillis();
-                    notifyMapOverlayFetched();
-                    putMapOverlay();
-                } else {
-                    notifyMapOverlayNotFetched("Overlay could not be fetched due to network connection issues. Please make sure that map's overlay URL is correct.");
+            private void tryToPutOverlay(int inSampleSize) {
+                try {
+                    putOverlay(inSampleSize);
+                } catch (OutOfMemoryError e) {
+                    notifyRescalingImage();
+                    tryToPutOverlay(inSampleSize+1);
                 }
             }
-            return null;
-        }
 
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            mMapEventListener.notifyMapOverlayDownloadProgress(progress[0]);
-        }
+            public void putOverlay(int _inSampleSize) {
+                try {
+                    Log.e("MAP", "tryinf to put overlay with inSampleSize = " + _inSampleSize);
+                    File inputFile = new File(mContext.getFilesDir(), MAP_FILE_NAME);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                    options.inSampleSize = _inSampleSize;
+                    Bitmap bitmap = BitmapFactory.decodeFile(inputFile.getAbsolutePath(), options);
+//                    android.util.Log.e("MAP", "map bitmap: " + bitmap.toString());
+                    final GroundOverlayOptions mapOptions = new GroundOverlayOptions()
+                            .image(BitmapDescriptorFactory.fromBitmap(bitmap))
+                            .positionFromBounds(mapBounds)
+                            .transparency(0.2f);
+//                    android.util.Log.e("MAP", "mapBounds: " + mapBounds.toString());
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (mGroundOverlay != null)
+                                    mGroundOverlay.remove();
+                                mGroundOverlay = mGoogleMap.addGroundOverlay(mapOptions);
+                                notifyMapReady();
+                                //mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(middle, DEFAULT_MAP_ZOOM));
+                            } catch (OutOfMemoryError e) {
 
-        private boolean downloadAndSaveBitmapFile() {
-            if (!assetsMapFileName.equals("")) {
-                return readMapOverlayFile();
-            } else if (!mapUrl.equals("")) {
-                return downloadMapOverlay();
-            }
-            return false;
-        }
-
-        private boolean readMapOverlayFile() {
-            try {
-                InputStream input = mContext.getAssets().open(assetsMapFileName);
-                mAppFileSystemUtil.writeInputStreamToFile(input, MAP_FILE_NAME, input.available(), mapFetchListener);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        private boolean downloadMapOverlay() {
-            mHttpDownloader = new HttpDownloader(mContext);
-            if (mHttpDownloader.isNetworkAvailable()) {
-                mHttpDownloader.openHttpUrlConnection(mapUrl);
-                InputStreamWithContentLength in = mHttpDownloader.getInputStream();
-                mHttpDownloader.closeHttpUrlConnection();
-                return mAppFileSystemUtil.writeInputStreamToFile(in.inputStream, MAP_FILE_NAME, in.contentLength, mapFetchListener);
-            }
-            return false;
-        }
-
-        private void writeOverlayBitmapToFile(Bitmap bitmap) {
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                InputStream inputstream = new ByteArrayInputStream(baos.toByteArray());
-                mAppFileSystemUtil.writeInputStreamToFile(inputstream, MAP_FILE_NAME, inputstream.available(), null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private Bitmap readOverlayFromFile(int inSampleSize) {
-            File inputFile = new File(mContext.getFilesDir(), MAP_FILE_NAME);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = inSampleSize;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            return BitmapFactory.decodeFile(inputFile.getAbsolutePath(), options);
-        }
-
-        private void compressMapOverlayAndTryAgain(int inSampleSize) {
-            try {
-                // get an overlay bitmap currently stored in the local filesystem
-                Bitmap overlayBitmap = readOverlayFromFile(inSampleSize);
-
-                if (overlayBitmap != null) {
-                    overlayBitmap = downscaleBitmap(overlayBitmap);
-                    if (overlayBitmap != null) {
-                        // save compressed bitmap to file
-                        writeOverlayBitmapToFile(overlayBitmap);
-                        //now try to put overlay to the map again
-                        putMapOverlay();
-                    } else {
-                        compressMapOverlayAndTryAgain(inSampleSize++);
-                    }
-                }
-            } catch (OutOfMemoryError e) {
-                compressMapOverlayAndTryAgain(inSampleSize++);
-            }
-        }
-
-        private Bitmap downscaleBitmap(Bitmap bitmap) {
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-            if (width > 0 && height > 0) {
-                bitmap = Bitmap.createScaledBitmap(bitmap
-                        , (int) (width * Map.OVERLAY_DOWNSCALE_FACTOR)
-                        , (int) (height * Map.OVERLAY_DOWNSCALE_FACTOR)
-                        , false);
-                return bitmap;
-            } else {
-                return null;
-            }
-        }
-
-        private void notifyRescalingImage() {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mMapEventListener.notifyRescalingImageStarted();
-                }
-            });
-        }
-
-        private void notifyMapReady() {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mMapEventListener.onMapReady();
-                }
-            });
-        }
-
-        private void notifyMapOverlayFetched() {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mMapEventListener.notifyMapOverlayFetchedSuccessfully();
-                }
-            });
-        }
-
-        private void notifyMapOverlayNotFetched(final String errorMsg) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mMapEventListener.notifyMapOverlayFetchingError(errorMsg);
-                }
-            });
-        }
-
-        private void putMapOverlay() {
-            try {
-                File inputFile = new File(mContext.getFilesDir(), MAP_FILE_NAME);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                Bitmap bitmap = BitmapFactory.decodeFile(inputFile.getAbsolutePath());
-                final GroundOverlayOptions mapOptions = new GroundOverlayOptions()
-                        .image(BitmapDescriptorFactory.fromBitmap(bitmap))
-                        .positionFromBounds(mapBounds)
-                        .transparency(0.2f);
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            if (mGroundOverlay != null)
-                                mGroundOverlay.remove();
-                            mGroundOverlay = mGoogleMap.addGroundOverlay(mapOptions);
-                            notifyMapReady();
-                            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(middle, DEFAULT_MAP_ZOOM));
-                        } catch (OutOfMemoryError e) {
+                            }
                         }
-                    }
-                });
-            } catch (OutOfMemoryError e) {
-                notifyRescalingImage();
-                compressMapOverlayAndTryAgain(INITIAL_IN_SAMPLE_SIZE_FOR_BITMAP_COMPRESSION);
+                    });
+                } catch (OutOfMemoryError e) {
+                    throw e;
+                }
             }
-        }
+        }).start();
     }
 
-    public void initMapOverlayFromUrl(String mapUrl) {
-        this.mapUrl = mapUrl;
-        assetsMapFileName = "";
-        new LoadMapOverlayFromUrlTask().executeOnExecutor(Executors.newSingleThreadExecutor());
+    private void notifyMapReady() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mMapEventListener.onMapReady();
+            }
+        });
     }
 
-    public void initMapOverlayFromFile(String filePath) {
-        mapUrl = "";
-        assetsMapFileName = filePath;
-        new LoadMapOverlayFromUrlTask().executeOnExecutor(Executors.newSingleThreadExecutor());
+    private void notifyRescalingImage() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mMapEventListener.notifyRescalingImageStarted();
+            }
+        });
     }
 
     @Override
@@ -537,8 +428,37 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
         if (mGoogleMap != null) {
             mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             initZoneLabelMarker();
+
+            mGoogleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                    marker.hideInfoWindow();
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    LatLng pos = marker.getPosition();
+                    marker.setTitle("lat: " + pos.latitude + ", lng: "+pos.longitude);
+                }
+            });
+
+            mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    if(clickedPositionMarker!=null){
+                        clickedPositionMarker.remove();
+                    }
+                    clickedPositionMarker = mGoogleMap.addMarker(new MarkerOptions()
+                            .position(latLng).title("lat: " + latLng.latitude + ", lng: "+latLng.longitude));
+                    clickedPositionMarker.setDraggable(true);
+                }
+            });
         }
-        googleMapReady = true;
     }
 
     public boolean setLocationOnMap(double latitude, double longitude) {
@@ -607,24 +527,14 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
     }
 
     private void updateCamera() {
-        synchronized (mGoogleMap) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mGoogleMap.getCameraPosition().zoom < DEFAULT_MAP_ZOOM) {
-                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                                .target(currentLocation)
-                                .bearing(currentCompassBearing)
-                                .zoom(DEFAULT_MAP_ZOOM).build()));
-                    } else {
-                        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
-                                .target(currentLocation)
-                                .bearing(currentCompassBearing)
-                                .zoom(mGoogleMap.getCameraPosition().zoom).build()));
-                    }
-                }
-            });
-
+        if (mGoogleMap.getCameraPosition().zoom < DEFAULT_MAP_ZOOM) {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                    .target(currentLocation)
+                    .bearing(currentCompassBearing).zoom(DEFAULT_MAP_ZOOM).build()));
+        } else {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder()
+                    .target(currentLocation)
+                    .bearing(currentCompassBearing).zoom(mGoogleMap.getCameraPosition().zoom).build()));
         }
     }
 
@@ -643,16 +553,16 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
     }
 
     public void highlightZone(List<LatLng> coords, String name) {
-        if(googleMapReady) {
+        if(zonesLabelPaint!=null) {
             PolygonOptions rectOptions = new PolygonOptions()
                     .addAll(new ArrayList<>(coords))
                     .fillColor(0x80C5E1A5)
                     .strokeWidth(0)
                     .geodesic(false);
 
-            // Get back the mutable Polygon
             if (zonesPolygons == null)
                 zonesPolygons = new ArrayList<>();
+            // Get back the mutable Polygon
             synchronized (zonesPolygons) {
                 zonesPolygons.add(mGoogleMap.addPolygon(rectOptions));
             }
@@ -724,5 +634,13 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
                 .addAll(path)
                 .width(5)
                 .color(0x803781CA)));
+    }
+
+    public String getLoadedMapUuid() {
+        return overlayUuid;
+    }
+
+    public void setLoadedMapUuid(String newUuid){
+        overlayUuid = newUuid;
     }
 }

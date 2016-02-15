@@ -10,7 +10,7 @@ import android.content.res.ColorStateList;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     private MapView mGoogleMapView;
 
-    private Map mLocationMap;
-
     private MaterialDialog mB;
+
+    private Map mLocationMap;
 
     private FloatingActionButton fab;
 
@@ -59,24 +59,15 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     private ListView lv;
 
-    private boolean mapDisplayPrepared = false;
-
     private MapEventListener mMapEventListener = new MapEventListener(){
         @Override
         public void notifyRescalingImageStarted() {
-            if(mB!=null) {
-                mB.getBuilder()
-                        .progress(false, 0);
-                mB.setContent(getResources().getString(R.string.rescaling_overlay));
-                mB.show();
-            }
+
         }
 
         @Override
         public void notifyMapOverlayDownloadProgress(int progressPercent) {
-            if(mB!=null){
-                mB.setProgress(progressPercent);
-            }
+
         }
 
         @Override
@@ -86,12 +77,11 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
         @Override
         public void onMapReady() {
+            android.util.Log.e("main","map ready!!!!!!!!!!!!!!");
             // map display is 100% ready
             dismissDialog();
-
             // display beacons markers on map
             mLocationMap.setMapBeaconsMarkers(mUbuduManager.mapBeacons());
-            mapDisplayPrepared = true;
         }
 
         @Override
@@ -166,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
         lv.setAdapter(adapter);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.indoor_location_off)));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.button_off)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
             }
         });
 
-        // Gets the MapView from the XML layout and creates it
+                // Gets the MapView from the XML layout and creates it
         mGoogleMapView = (MapView) findViewById(R.id.map);
         mGoogleMapView.onCreate(savedInstanceState);
         mGoogleMapView.onResume(); //without this, map showed but was empty
@@ -189,12 +179,12 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     public void toggleUbuduIndoorLocationSDK() {
         if (!mUbuduManager.isStarted()) {
-            fab.setEnabled(false);
-            if(isLocationServiceEnabled())
+            if (BluetoothAdapter.getDefaultAdapter().getState() != BluetoothAdapter.STATE_ON) {
+                this.activateBluetooth(REQUEST_ENABLE_BT_FOR_IL);
+            } else {
+                startLoadingDialog();
+                fab.setEnabled(false);
                 start();
-            else{
-                Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(enableLocationIntent, MyApplication.TURN_ON_LOCATION_SERVICES);
             }
         } else {
             stop();
@@ -204,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
     private void stop() {
         mUbuduManager.stop();
         fab.clearAnimation();
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.indoor_location_off)));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.button_off)));
         printLog("Indoor location stopped");
     }
 
@@ -212,12 +202,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
         Animation rotation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_rotate);
         rotation.setRepeatCount(Animation.INFINITE);
         fab.startAnimation(rotation);
-        if (BluetoothAdapter.getDefaultAdapter().getState() != BluetoothAdapter.STATE_ON) {
-            this.activateBluetooth(REQUEST_ENABLE_BT_FOR_IL);
-        } else {
-            startLoadingDialog();
-            mUbuduManager.start();
-        }
+        mUbuduManager.start();
     }
 
     private boolean activateBluetooth(int requestCode) {
@@ -256,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     private void startLoadingDialog() {
         mB = new MaterialDialog.Builder(this)
-                .content(getResources().getString(R.string.fetching_map))
+                .content(getResources().getString(R.string.starting_il))
                 .progress(true, 0)
                 .autoDismiss(false)
                 .cancelable(false)
@@ -274,37 +259,98 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     public void started(){
         if(mLocationMap !=null){
+            // start loading dialog indicating that map contents are beeing loaded
             dismissDialog();
-            prepareMapDisplay();
+            //showLoadingDialogForPreparingMapDisplay();
         }
     }
 
-    private void prepareMapDisplay() {
-        if(!mapDisplayPrepared) {
+    @Override
+    public void reloadMapOverlay(String uuid, boolean force) {
+        if (mUbuduManager.mapOverlaysFetchingEnabled() &&  mUbuduManager.isMapAvailable()) {
+            if(!mLocationMap.isMapOverlayLoaded() || (mLocationMap.isMapOverlayLoaded() && mLocationMap.getLoadedMapUuid()!=null && !mLocationMap.getLoadedMapUuid().equals(uuid)) || force ) {
+                mLocationMap.setLoadedMapUuid(null);
+                // start loading dialog indicating that map contents are being loaded
+                showLoadingDialogForPreparingMapDisplay();
 
-            // start loading dialog indicating that map contents are beeing loaded
-            showLoadingDialogForPreparingMapDisplay();
+                // reset map
+                mLocationMap.reset();
 
-            // reset map
-            mLocationMap.reset();
+                UbuduCoordinates2D bottomRightAnchorCoordinates = mUbuduManager.bottomRightAnchorCoordinates();
+                UbuduCoordinates2D topLeftAnchorCoordinates = mUbuduManager.topLeftAnchorCoordinates();
 
-            UbuduCoordinates2D bottomRightAnchorCoordinates = mUbuduManager.bottomRightAnchorCoordinates();
-            UbuduCoordinates2D topLeftAnchorCoordinates = mUbuduManager.topLeftAnchorCoordinates();
+                // Set overlay image bounds
+                mLocationMap.setMapOverlayBounds(new LatLng(bottomRightAnchorCoordinates.latitude(), topLeftAnchorCoordinates.longitude()),
+                        new LatLng(topLeftAnchorCoordinates.latitude(), bottomRightAnchorCoordinates.longitude()));
 
-            // Set overlay image bounds
-            mLocationMap.setMapOverlayBounds(new LatLng(bottomRightAnchorCoordinates.latitude(), topLeftAnchorCoordinates.longitude()),
-                    new LatLng(topLeftAnchorCoordinates.latitude(), bottomRightAnchorCoordinates.longitude()));
+                android.util.Log.e("mainActivity", "map height:"
+                        + distanceBetweenCoordinates(new UbuduCoordinates2D(bottomRightAnchorCoordinates.toRadians().latitude()
+                        , topLeftAnchorCoordinates.toRadians().longitude())
+                        , topLeftAnchorCoordinates));
 
-            // Fetch map from file/url and display
-            //mLocationMap.initMapOverlayFromUrl(mUbuduManager.getMapUrl());
-            mLocationMap.initMapOverlayFromFile(UbuduManager.OVERLAY_FILE_NAME);
+                android.util.Log.e("mainActivity", "map width:"
+                        + distanceBetweenCoordinates(new UbuduCoordinates2D(topLeftAnchorCoordinates.toRadians().latitude()
+                        ,bottomRightAnchorCoordinates.toRadians().longitude())
+                        , topLeftAnchorCoordinates));
+
+                // Fetch map from file/url and display
+                mLocationMap.initMapOverlayFromInputStream(mUbuduManager.getMapOverlayInputStream());
+            }
+        } else {
+            mMapEventListener.onMapReady();
         }
+        mLocationMap.setLoadedMapUuid(uuid);
+        dismissDialog();
+    }
+
+    private Handler stepDetectionHandler;
+    private long lastStepDetectedTime = 0L;
+    private long MOVEMENT_TIMEOUT = 5000L;
+
+    @Override
+    public void stepDetected() {
+        if (lastStepDetectedTime + MOVEMENT_TIMEOUT < System.currentTimeMillis()) {
+            lastStepDetectedTime = System.currentTimeMillis();
+
+            printLog("Walking detected");
+
+            if (stepDetectionHandler == null) {
+                stepDetectionHandler = new Handler(getMainLooper());
+            }
+            stepDetectionHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (lastStepDetectedTime + MOVEMENT_TIMEOUT < System.currentTimeMillis()) {
+                        printLog("No more motion");
+                    } else
+                        stepDetectionHandler.postDelayed(this, 1000L);
+                }
+            });
+        }
+    }
+
+    /**
+     * Calculate great circle distance between points on a sphere using the Haversine Formula. Input geographical coordinates must be given in radians.
+     *
+     * @param c1 start point coordinates
+     * @param c2 end point coordinates
+     */
+    public static double distanceBetweenCoordinates(UbuduCoordinates2D c1,UbuduCoordinates2D c2){
+        if(c1!=null && c2!=null) {
+            double delta_latitude = c2.latitude() - c1.latitude();
+            double delta_longitude = c2.longitude() - c1.longitude();
+            double a = Math.sin(delta_latitude / 2.0) * Math.sin(delta_latitude / 2.0)
+                    + Math.cos(c1.latitude()) * Math.cos(c2.latitude()) * Math.sin(delta_longitude / 2.0) * Math.sin(delta_longitude / 2.0);
+            double result = 6378137.0 * 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
+            return result;
+        } else return -1.0d;
     }
 
     private void showLoadingDialogForPreparingMapDisplay() {
+        dismissDialog();
         mB = new MaterialDialog.Builder(this)
-                .content(getResources().getString(R.string.fetching_map_overlay))
-                .progress(false,100,false)
+                .progress(true, 0)
+                .content(getResources().getString(R.string.fetching_map))
                 .autoDismiss(false)
                 .cancelable(false)
                 .show();
@@ -312,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     @Override
     public void indoorLocationStarted() {
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.indoor_location_on)));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.button_on)));
         fab.clearAnimation();
         fab.setEnabled(true);
         printLog("Indoor location started successfully");
@@ -354,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     @Override
     public boolean readyForPositionUpdates() {
-        if (mLocationMap != null && mapDisplayPrepared)
+        if (mLocationMap != null && mLocationMap.isMapOverlayLoaded())
             return true;
         else return false;
     }
@@ -380,6 +426,8 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
         super.onResume();
         if(mLocationMap != null)
             mLocationMap.onResume();
+
+        mUbuduManager.onResume();
     }
 
     @Override
@@ -400,12 +448,18 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
     Delegate <-> app interface methods
      */
     @Override
-    public void printLog(String formatControl, Object... arguments) {
-        final String newText = String.format(formatControl, arguments);
-        synchronized (adapter) {
-            Date d = new Date();
-            adapter.add("[" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "] " + newText);
-        }
+    public void printLog(final String formatControl, final Object... arguments) {
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                final String newText = String.format(formatControl, arguments);
+                synchronized (adapter) {
+                    Date d = new Date();
+                    adapter.add("[" + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "] " + newText);
+                }
+            }
+        });
+
     }
 
     public void clearLog() {

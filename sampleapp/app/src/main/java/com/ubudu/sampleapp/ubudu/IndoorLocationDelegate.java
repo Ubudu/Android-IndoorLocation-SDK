@@ -10,9 +10,9 @@ import com.ubudu.indoorlocation.UbuduIndoorLocationManager;
 import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 import com.ubudu.indoorlocation.UbuduMap;
 import com.ubudu.indoorlocation.UbuduPoint;
+import com.ubudu.indoorlocation.UbuduPosition;
 import com.ubudu.indoorlocation.UbuduPositionUpdate;
 import com.ubudu.indoorlocation.UbuduZone;
-import com.ubudu.sampleapp.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +28,8 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
     private UbuduManager mManager;
     UbuduIndoorLocationManager mIndoorLocationManager;
 
-    public UbuduPoint lastPosition, currentSmoothedPositionNavPoint;
+    public UbuduPosition lastPosition;
+    public UbuduPoint currentSmoothedPositionNavPoint;
     public List<UbuduPoint> path;
     private UbuduMap ubuduMap;
 
@@ -40,18 +41,17 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
     @SuppressLint("LongLogTag")
     @Override
     public void positionChanged(UbuduPositionUpdate ubuduPositionUpdate) {
-
         if (mManager.mapDisplayReady()) {
             if (ubuduMap != null) {
-                if (lastPosition != null && !mManager.shouldReset()) {
-                    currentSmoothedPositionNavPoint = ubuduMap.getClosestNavigablePointFromPosition(ubuduPositionUpdate.getSmoothedPosition());
-                    path = ubuduMap.path(lastPosition, currentSmoothedPositionNavPoint);
+                if (lastPosition != null && !mManager.shouldReset() && lastPosition.getLevel() == ubuduPositionUpdate.getEstimatedPosition().getLevel()) {
+                    currentSmoothedPositionNavPoint = ubuduMap.getClosestNavigablePointFromPosition(ubuduPositionUpdate.getSmoothedPosition().getCartesianCoordinates());
+                    path = ubuduMap.path(lastPosition.getCartesianCoordinates(), currentSmoothedPositionNavPoint);
                     if (path != null) {
                         List<LatLng> pathGeoCoords = new ArrayList<>();
                         Iterator<UbuduPoint> iter = path.iterator();
                         UbuduCoordinates2D geoCoords;
                         while (iter.hasNext()) {
-                            geoCoords = mIndoorLocationManager.geoCoordinates(iter.next());
+                            geoCoords = mIndoorLocationManager.map().geoCoordinates(iter.next());
                             pathGeoCoords.add(new LatLng(geoCoords.latitude(), geoCoords.longitude()));
                         }
                         mManager.drawPath(pathGeoCoords);
@@ -59,8 +59,9 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
                 }
                 lastPosition = ubuduPositionUpdate.getClosestNavigablePoint();
 
-                UbuduCoordinates2D geoCoords = mIndoorLocationManager.geoCoordinates(lastPosition);
-                mManager.setLocationOnMap(geoCoords.latitude(), geoCoords.longitude());
+                android.util.Log.e(TAG,"new pos: "+lastPosition.getGeographicalCoordinates().toString());
+
+                mManager.setLocationOnMap(lastPosition.getGeographicalCoordinates().latitude(), lastPosition.getGeographicalCoordinates().longitude());
                 mManager.reseted();
             } else {
                 try {
@@ -83,9 +84,7 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
     public void closestZoneChanged(UbuduPositionUpdate ubuduPositionUpdate) {
         UbuduZone closestZone = ubuduPositionUpdate.getClosestZone();
         if (ubuduPositionUpdate.getClosestZone() != null)
-            mManager.printf("Closest zone is now: " + closestZone.name() + ". Distance: "
-                    + MathUtils.round(mIndoorLocationManager
-                    .convertPixelDistanceToMeters(closestZone.distanceToPoint(ubuduPositionUpdate.getClosestNavigablePoint())), 2));
+            mManager.printf("Closest zone is now: " + closestZone.name());
     }
 
     @Override
@@ -115,17 +114,12 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
     }
 
     @Override
-    public void startSucceed() {
-        ubuduMap = mIndoorLocationManager.map();
-        if (mManager != null) {
-            mManager.tellAppILStarted();
-        }
+    public void mapChanged(String uuid, int level) {
+        mManager.printf("Indoor map changed to: "+uuid);
+        mManager.loadMapOverlay(uuid, false);
     }
 
-    @Override
-    public void startFailed() {
-        if (mManager != null) {
-            mManager.tellAppILStartFailed();
-        }
+    public void setMap(UbuduMap map) {
+        ubuduMap = map;
     }
 }

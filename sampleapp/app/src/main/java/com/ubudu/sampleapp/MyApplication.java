@@ -22,9 +22,13 @@ public class MyApplication extends Application implements Application.ActivityLi
     private static volatile boolean isAppInBackground = false;
 
     @Override
+    protected void attachBaseContext(Context base){
+        super.attachBaseContext(base);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-
         MyApplication.context = getApplicationContext();
 
         if (getAppContext() instanceof Application) {

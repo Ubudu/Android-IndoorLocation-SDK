@@ -2,9 +2,8 @@
     <string name="app_name">Ubudu IL</string>
     <string name="action_settings">Settings</string>
 
-    <string name="fetching_map">Fetching map data...</string>
-    <string name="fetching_map_overlay">Fetching map\'s overlay image...</string>
-    <string name="rescaling_overlay">Rescaling the overlay image...</string>
+    <string name="fetching_map">Loading map data...</string>
+    <string name="starting_il">Indoor Location is starting...</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

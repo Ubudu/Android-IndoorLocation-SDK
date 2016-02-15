@@ -54,4 +54,12 @@ public interface MapInterface {
 	 */
 	void updateActiveBeacons(List<UbuduBeacon> beacons);
 
+	/**
+	 * prepare map overlay and beaocns display
+	 * @param uuid
+	 * @param force
+	 */
+	void reloadMapOverlay(String uuid, boolean force);
+
+	void stepDetected();
 }

@@ -159,9 +159,8 @@ This method stops the bluetooth monitoring related to Indoor Location.
 <td align="left">MG</td>
 <td align="left">
 <p>Improvements:</p>
-<ul><li>removed unnecessary permissions from manifest</li></ul>
-<p>Issues addressed:</p>
-<ul><li>improved remote content auto-update</li></ul>
+<ul><li>removed unnecessary permissions from manifest</li>
+<li>improved remote content auto-update</li></ul>
 </td>
 </tr>
 </tbody>

@@ -67,7 +67,7 @@ public class UbuduManager {
         UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getAppContext());
 
         mSdk.enableMapOverlaysFetching(ENABLE_MAP_OVERLAYS_FETCHING);
-        mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a9002cde");
+        mSdk.setNamespace("7c62cb6cc409004dc879f3fd7c4d838f0d07dbc8");
 
         mIndoorLocationManager = mSdk.getIndoorLocationManager();
 

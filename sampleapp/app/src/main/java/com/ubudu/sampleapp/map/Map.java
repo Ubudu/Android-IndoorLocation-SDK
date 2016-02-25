@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.BearingListener {
+public class Map implements GoogleMap.OnMapLoadedCallback {
 
     private int DEFAULT_MAP_ZOOM = 19;
     private final String MAP_FILE_NAME = "mapoverlay";
@@ -77,8 +77,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
 
     private float currentCompassBearing;
 
-    private MapBearingManager mMapRotationSensorManager;
-
     private String overlayUuid;
 
     private Marker clickedPositionMarker;
@@ -95,7 +93,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
         mContext = ctx;
         mAppFileSystemUtil = new AppFileSystemUtil(ctx);
         initOnMapLoadedCallback();
-        mMapRotationSensorManager = new MapBearingManager(ctx, this);
     }
 
     private void initOnMapLoadedCallback() {
@@ -255,14 +252,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
         middle = new LatLng(southWest.latitude + (northEast.latitude - southWest.latitude) / 2, southWest.longitude + (northEast.longitude - southWest.longitude) / 2);
     }
 
-    public void onPause() {
-        mMapRotationSensorManager.unregister();
-    }
-
-    public void onResume() {
-        mMapRotationSensorManager.register();
-    }
-
     public void onDestroy() {
         clearMap();
     }
@@ -326,7 +315,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
         mAppFileSystemUtil.removeFile(MAP_FILE_NAME);
     }
 
-    @Override
     public void bearing(float bearing) {
         currentCompassBearing = bearing;
     }
@@ -478,8 +466,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
                 }
                 updateCamera();
             }
-            // update declination for compass bearing calculation
-            mMapRotationSensorManager.updateDeclination(currentLocation);
             return true;
         } catch(NullPointerException npe){
             npe.printStackTrace();
@@ -642,5 +628,17 @@ public class Map implements GoogleMap.OnMapLoadedCallback, MapBearingManager.Bea
 
     public void setLoadedMapUuid(String newUuid){
         overlayUuid = newUuid;
+    }
+
+    public void updateBearing(float azimuth) {
+        currentCompassBearing = azimuth;
+    }
+
+    public void onPause() {
+
+    }
+
+    public void onResume() {
+
     }
 }

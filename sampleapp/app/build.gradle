@@ -29,14 +29,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.1.7@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.2.3@aar') {
         transitive = true
     }
 
     // google services
     compile('com.google.android.gms:play-services-maps:8.4.0')
 
-    compile('com.afollestad.material-dialogs:core:0.8.5.2@aar') {
+    compile('com.afollestad.material-dialogs:core:0.8.5.4@aar') {
         transitive = true
     }
 

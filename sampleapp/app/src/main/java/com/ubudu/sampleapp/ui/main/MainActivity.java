@@ -329,6 +329,11 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
         }
     }
 
+    @Override
+    public void azimuthUpdated(float azimuth) {
+        mLocationMap.updateBearing(azimuth);
+    }
+
     /**
      * Calculate great circle distance between points on a sphere using the Haversine Formula. Input geographical coordinates must be given in radians.
      *

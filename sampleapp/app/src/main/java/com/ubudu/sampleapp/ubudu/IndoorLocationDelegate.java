@@ -119,6 +119,11 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
         mManager.loadMapOverlay(uuid, false);
     }
 
+    @Override
+    public void azimuthUpdated(float azimuth) {
+        mManager.azimuthUpdated(azimuth);
+    }
+
     public void setMap(UbuduMap map) {
         ubuduMap = map;
     }

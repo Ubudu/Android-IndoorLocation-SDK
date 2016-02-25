@@ -62,4 +62,6 @@ public interface MapInterface {
 	void reloadMapOverlay(String uuid, boolean force);
 
 	void stepDetected();
+
+	void azimuthUpdated(float azimuth);
 }

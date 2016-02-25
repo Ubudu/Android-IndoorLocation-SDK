@@ -113,6 +113,7 @@ public class UbuduManager {
                 public void success() {
                     mIndoorLocationDelegate.setMap(mIndoorLocationManager.map());
                     tellAppILStarted();
+                    mIndoorLocationManager.startAzimuthUpdates();
                 }
 
                 @Override
@@ -139,6 +140,7 @@ public class UbuduManager {
 
     public void stop(){
         if(mIndoorLocationManager!=null){
+            mIndoorLocationManager.stopAzimuthUpdates();
             mIndoorLocationManager.stop();
         }
     }
@@ -273,5 +275,9 @@ public class UbuduManager {
             mIndoorLocationManager.setFloorSwitchingWhenInTransitionZoneOnly(transitionZonesFloorSwitchingEnabled);
         }
         return transitionZonesFloorSwitchingEnabled;
+    }
+
+    public void azimuthUpdated(float azimuth) {
+        appInterface.azimuthUpdated(azimuth);
     }
 }

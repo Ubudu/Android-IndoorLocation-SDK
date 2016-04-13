@@ -59,7 +59,7 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
                 }
                 lastPosition = ubuduPositionUpdate.getClosestNavigablePoint();
 
-                android.util.Log.e(TAG,"new pos: "+lastPosition.getGeographicalCoordinates().toString());
+                android.util.Log.i(TAG,"new pos: "+lastPosition.getGeographicalCoordinates().toString());
 
                 mManager.setLocationOnMap(lastPosition.getGeographicalCoordinates().latitude(), lastPosition.getGeographicalCoordinates().longitude());
                 mManager.reseted();
@@ -117,11 +117,6 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
     public void mapChanged(String uuid, int level) {
         mManager.printf("Indoor map changed to: "+uuid);
         mManager.loadMapOverlay(uuid, false);
-    }
-
-    @Override
-    public void azimuthUpdated(float azimuth) {
-        mManager.azimuthUpdated(azimuth);
     }
 
     public void setMap(UbuduMap map) {

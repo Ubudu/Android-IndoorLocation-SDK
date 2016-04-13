@@ -6,6 +6,7 @@ import android.os.Looper;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.ubudu.indoorlocation.UbuduBeacon;
+import com.ubudu.indoorlocation.UbuduCompassListener;
 import com.ubudu.indoorlocation.UbuduCoordinates2D;
 import com.ubudu.indoorlocation.UbuduIndoorLocationManager;
 import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
@@ -28,7 +29,7 @@ public class UbuduManager {
 
     private static final String TAG = "UbuduManager";
 
-    private static boolean ENABLE_MAP_OVERLAYS_FETCHING = true;
+    private static boolean USE_PARTICLE_FILTERING = true;
 
     private static UbuduManager instance;
 
@@ -57,32 +58,34 @@ public class UbuduManager {
         }
     }
 
-    public static boolean mapOverlaysFetchingEnabled(){
-        return ENABLE_MAP_OVERLAYS_FETCHING;
-    }
-
     public UbuduManager() {
         mIndoorLocationDelegate = new IndoorLocationDelegate(this);
 
         UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getAppContext());
-
-        mSdk.enableMapOverlaysFetching(ENABLE_MAP_OVERLAYS_FETCHING);
         mSdk.setNamespace("7c62cb6cc409004dc879f3fd7c4d838f0d07dbc8");
 
         mIndoorLocationManager = mSdk.getIndoorLocationManager();
 
+        mIndoorLocationManager.setParticleFilteringEnabled(USE_PARTICLE_FILTERING);
         mIndoorLocationManager.setIndoorLocationDelegate(mIndoorLocationDelegate);
         //mIndoorLocationManager.loadMapFromAssetsFile(MAP_FILE_NAME);
         mIndoorLocationManager.setAutomaticServiceRestart(false);
-        mIndoorLocationManager.setRangingScanPeriods(2000, 1100);
-        mIndoorLocationManager.setRangingBetweenScanPeriods(200, 200);
+        mIndoorLocationManager.setRangingScanPeriods(800, 1100);
+        mIndoorLocationManager.setRangingBetweenScanPeriods(300, 200);
 
         mIndoorLocationManager.setRangedBeaconsNotifier(new UbuduRangedBeaconsNotifier() {
             @Override
             public void didRangeBeacons(List<UbuduBeacon> rangedBeacons) {
                 if (rangedBeacons != null) {
-                    android.util.Log.e(TAG, "num of beacons: " + rangedBeacons.size());
+                    android.util.Log.i(TAG, "num of beacons: " + rangedBeacons.size());
                 }
+            }
+        });
+
+        mIndoorLocationManager.setCompassListener(new UbuduCompassListener() {
+            @Override
+            public void azimuthUpdated(float azimuth) {
+                appInterface.azimuthUpdated(azimuth);
             }
         });
 
@@ -113,7 +116,6 @@ public class UbuduManager {
                 public void success() {
                     mIndoorLocationDelegate.setMap(mIndoorLocationManager.map());
                     tellAppILStarted();
-                    mIndoorLocationManager.startAzimuthUpdates();
                 }
 
                 @Override
@@ -140,7 +142,6 @@ public class UbuduManager {
 
     public void stop(){
         if(mIndoorLocationManager!=null){
-            mIndoorLocationManager.stopAzimuthUpdates();
             mIndoorLocationManager.stop();
         }
     }
@@ -248,7 +249,7 @@ public class UbuduManager {
 
     public void loadMapOverlay(String uuid, boolean force) {
         if(appInterface!=null)
-            appInterface.reloadMapOverlay(uuid, force);
+            appInterface.reloadMapOverlay(uuid, force, mIndoorLocationManager.map().getTilesBaseUrl());
     }
 
     public InputStream getMapOverlayInputStream(){
@@ -257,11 +258,6 @@ public class UbuduManager {
 
     public UbuduMap getMap(){
         return mIndoorLocationManager.map();
-    }
-
-    public void stepDetected() {
-        if(appInterface!=null)
-            appInterface.stepDetected();
     }
 
     private boolean transitionZonesFloorSwitchingEnabled = false;
@@ -275,9 +271,5 @@ public class UbuduManager {
             mIndoorLocationManager.setFloorSwitchingWhenInTransitionZoneOnly(transitionZonesFloorSwitchingEnabled);
         }
         return transitionZonesFloorSwitchingEnabled;
-    }
-
-    public void azimuthUpdated(float azimuth) {
-        appInterface.azimuthUpdated(azimuth);
     }
 }

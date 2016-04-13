@@ -36,6 +36,8 @@ import com.ubudu.sampleapp.map.storage.AppFileSystemUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,15 +45,10 @@ import java.util.List;
 public class Map implements GoogleMap.OnMapLoadedCallback {
 
     private int DEFAULT_MAP_ZOOM = 19;
-    private final String MAP_FILE_NAME = "mapoverlay";
     private final long ANIMATE_POSITION_CHANGE_DURATION = 500; // ms
-    private int INITIAL_IN_SAMPLE_SIZE_FOR_BITMAP_COMPRESSION = 1;
 
-    private long mapOverlayTimeStamp = -1;
 
     private GoogleMap mGoogleMap;
-
-    private GroundOverlay mGroundOverlay = null;
 
     protected MapEventListener mMapEventListener;
 
@@ -66,12 +63,7 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
 
     private List<Polyline> pathPolylines;
 
-    private LatLngBounds mapBounds;
-    private LatLng middle;
-
     private Context mContext;
-
-    private AppFileSystemUtil mAppFileSystemUtil;
 
     private MapMarkers markers;
 
@@ -91,7 +83,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
         markers = MapMarkers.getInstance();
         mMapEventListener = eventListener;
         mContext = ctx;
-        mAppFileSystemUtil = new AppFileSystemUtil(ctx);
         initOnMapLoadedCallback();
     }
 
@@ -245,13 +236,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
         }
     }
 
-    public void setMapOverlayBounds(LatLng southWest, LatLng northEast) {
-        mapBounds = new LatLngBounds(
-                southWest,       // South west image corner
-                northEast);      // North east image corner
-        middle = new LatLng(southWest.latitude + (northEast.latitude - southWest.latitude) / 2, southWest.longitude + (northEast.longitude - southWest.longitude) / 2);
-    }
-
     public void onDestroy() {
         clearMap();
     }
@@ -272,7 +256,6 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
         clearActiveBeaconsMarkers();
         clearHighlightedZones();
         clearPathPolyline();
-        removeGroundOverlay();
         clearMap();
     }
 
@@ -294,121 +277,8 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
             }
     }
 
-    public boolean isMapOverlayLoaded(){
-        if(mGroundOverlay!=null || overlayUuid!=null){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void removeGroundOverlay() {
-        if (mGroundOverlay != null)
-            mGroundOverlay.remove();
-
-        removeGroundOverlayFile();
-        mapOverlayTimeStamp = -1;
-    }
-
-    private void removeGroundOverlayFile() {
-        AppFileSystemUtil mAppFileSystemUtil = new AppFileSystemUtil(mContext);
-        mAppFileSystemUtil.removeFile(MAP_FILE_NAME);
-    }
-
     public void bearing(float bearing) {
         currentCompassBearing = bearing;
-    }
-
-    public void initMapOverlayFromInputStream(InputStream mapOverlayInputStream) {
-        if(mapOverlayInputStream!=null) {
-            try {
-                writeInputStreamToFile(mapOverlayInputStream);
-                mapOverlayInputStream.close();
-                putMapOverlay(INITIAL_IN_SAMPLE_SIZE_FOR_BITMAP_COMPRESSION);
-            } catch(Exception e){
-
-            }
-        }
-    }
-
-    private void writeInputStreamToFile(InputStream in){
-        try{
-            mAppFileSystemUtil.writeInputStreamToFile(in, MAP_FILE_NAME, in.available(), null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void putMapOverlay(final int inSampleSize) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                tryToPutOverlay(inSampleSize);
-            }
-
-            private void tryToPutOverlay(int inSampleSize) {
-                try {
-                    putOverlay(inSampleSize);
-                } catch (OutOfMemoryError e) {
-                    notifyRescalingImage();
-                    tryToPutOverlay(inSampleSize+1);
-                }
-            }
-
-            public void putOverlay(int _inSampleSize) {
-                try {
-                    Log.e("MAP", "tryinf to put overlay with inSampleSize = " + _inSampleSize);
-                    File inputFile = new File(mContext.getFilesDir(), MAP_FILE_NAME);
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                    options.inSampleSize = _inSampleSize;
-                    Bitmap bitmap = BitmapFactory.decodeFile(inputFile.getAbsolutePath(), options);
-//                    android.util.Log.e("MAP", "map bitmap: " + bitmap.toString());
-                    final GroundOverlayOptions mapOptions = new GroundOverlayOptions()
-                            .image(BitmapDescriptorFactory.fromBitmap(bitmap))
-                            .positionFromBounds(mapBounds)
-                            .transparency(0.2f);
-//                    android.util.Log.e("MAP", "mapBounds: " + mapBounds.toString());
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (mGroundOverlay != null)
-                                    mGroundOverlay.remove();
-                                mGroundOverlay = mGoogleMap.addGroundOverlay(mapOptions);
-                                notifyMapReady();
-                                //mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(middle, DEFAULT_MAP_ZOOM));
-                            } catch (OutOfMemoryError e) {
-
-                            }
-                        }
-                    });
-                } catch (OutOfMemoryError e) {
-                    throw e;
-                }
-            }
-        }).start();
-    }
-
-    private void notifyMapReady() {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                mMapEventListener.onMapReady();
-            }
-        });
-    }
-
-    private void notifyRescalingImage() {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                mMapEventListener.notifyRescalingImageStarted();
-            }
-        });
     }
 
     @Override
@@ -640,5 +510,22 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
 
     public void onResume() {
 
+    }
+
+    public void setTilesBaseUrl(final String tilesUrlBase) {
+        mGoogleMap.addTileOverlay(new CachingUrlTileProvider(mContext, 256, 256) {
+            @Override
+            public String getTileUrl(int x, int y, int zoom) {
+                try {
+                    int ymax = 1 << zoom;
+                    int y_m = ymax-y-1;
+                    return new URL(tilesUrlBase.replace("{z}", "" + zoom).replace("{x}", "" + x)
+                            .replace("{y}", "" + y_m)).toString();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.createTileOverlayOptions()).setZIndex(-1f);
     }
 }

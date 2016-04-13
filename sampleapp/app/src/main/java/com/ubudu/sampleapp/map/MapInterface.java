@@ -59,9 +59,7 @@ public interface MapInterface {
 	 * @param uuid
 	 * @param force
 	 */
-	void reloadMapOverlay(String uuid, boolean force);
-
-	void stepDetected();
+	void reloadMapOverlay(String uuid, boolean force, String tilesUrlBase);
 
 	void azimuthUpdated(float azimuth);
 }

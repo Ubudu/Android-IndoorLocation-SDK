@@ -266,89 +266,21 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
     }
 
     @Override
-    public void reloadMapOverlay(String uuid, boolean force) {
-        if (mUbuduManager.mapOverlaysFetchingEnabled() &&  mUbuduManager.isMapAvailable()) {
-            if(!mLocationMap.isMapOverlayLoaded() || (mLocationMap.isMapOverlayLoaded() && mLocationMap.getLoadedMapUuid()!=null && !mLocationMap.getLoadedMapUuid().equals(uuid)) || force ) {
-                mLocationMap.setLoadedMapUuid(null);
-                // start loading dialog indicating that map contents are being loaded
-                showLoadingDialogForPreparingMapDisplay();
-
-                // reset map
-                mLocationMap.reset();
-
-                UbuduCoordinates2D bottomRightAnchorCoordinates = mUbuduManager.bottomRightAnchorCoordinates();
-                UbuduCoordinates2D topLeftAnchorCoordinates = mUbuduManager.topLeftAnchorCoordinates();
-
-                // Set overlay image bounds
-                mLocationMap.setMapOverlayBounds(new LatLng(bottomRightAnchorCoordinates.latitude(), topLeftAnchorCoordinates.longitude()),
-                        new LatLng(topLeftAnchorCoordinates.latitude(), bottomRightAnchorCoordinates.longitude()));
-
-                android.util.Log.e("mainActivity", "map height:"
-                        + distanceBetweenCoordinates(new UbuduCoordinates2D(bottomRightAnchorCoordinates.toRadians().latitude()
-                        , topLeftAnchorCoordinates.toRadians().longitude())
-                        , topLeftAnchorCoordinates));
-
-                android.util.Log.e("mainActivity", "map width:"
-                        + distanceBetweenCoordinates(new UbuduCoordinates2D(topLeftAnchorCoordinates.toRadians().latitude()
-                        ,bottomRightAnchorCoordinates.toRadians().longitude())
-                        , topLeftAnchorCoordinates));
-
-                // Fetch map from file/url and display
-                mLocationMap.initMapOverlayFromInputStream(mUbuduManager.getMapOverlayInputStream());
-            }
-        } else {
-            mMapEventListener.onMapReady();
+    public void reloadMapOverlay(String uuid, boolean force, String tilesUrlBase) {
+        if (mUbuduManager.isMapAvailable()) {
+            mLocationMap.setLoadedMapUuid(null);
+            // reset map
+            mLocationMap.reset();
+            mLocationMap.setTilesBaseUrl(tilesUrlBase);
         }
+        mMapEventListener.onMapReady();
         mLocationMap.setLoadedMapUuid(uuid);
         dismissDialog();
-    }
-
-    private Handler stepDetectionHandler;
-    private long lastStepDetectedTime = 0L;
-    private long MOVEMENT_TIMEOUT = 5000L;
-
-    @Override
-    public void stepDetected() {
-        if (lastStepDetectedTime + MOVEMENT_TIMEOUT < System.currentTimeMillis()) {
-            lastStepDetectedTime = System.currentTimeMillis();
-
-            printLog("Walking detected");
-
-            if (stepDetectionHandler == null) {
-                stepDetectionHandler = new Handler(getMainLooper());
-            }
-            stepDetectionHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (lastStepDetectedTime + MOVEMENT_TIMEOUT < System.currentTimeMillis()) {
-                        printLog("No more motion");
-                    } else
-                        stepDetectionHandler.postDelayed(this, 1000L);
-                }
-            });
-        }
     }
 
     @Override
     public void azimuthUpdated(float azimuth) {
         mLocationMap.updateBearing(azimuth);
-    }
-
-    /**
-     * Calculate great circle distance between points on a sphere using the Haversine Formula. Input geographical coordinates must be given in radians.
-     *
-     * @param c1 start point coordinates
-     * @param c2 end point coordinates
-     */
-    public static double distanceBetweenCoordinates(UbuduCoordinates2D c1,UbuduCoordinates2D c2){
-        if(c1!=null && c2!=null) {
-            double delta_latitude = c2.latitude() - c1.latitude();
-            double delta_longitude = c2.longitude() - c1.longitude();
-            double a = Math.sin(delta_latitude / 2.0) * Math.sin(delta_latitude / 2.0)
-                    + Math.cos(c1.latitude()) * Math.cos(c2.latitude()) * Math.sin(delta_longitude / 2.0) * Math.sin(delta_longitude / 2.0);
-            double result = 6378137.0 * 2.0 * Math.atan2(Math.sqrt(a), Math.sqrt(1.0 - a));
-            return result;
-        } else return -1.0d;
     }
 
     private void showLoadingDialogForPreparingMapDisplay() {
@@ -405,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
 
     @Override
     public boolean readyForPositionUpdates() {
-        if (mLocationMap != null && mLocationMap.isMapOverlayLoaded())
+        if (mLocationMap != null)
             return true;
         else return false;
     }

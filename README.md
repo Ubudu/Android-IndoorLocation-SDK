@@ -1,74 +1,85 @@
-# Android-IndoorLocation-SDK - version 2.2.3
+# Android-IndoorLocation-SDK - version 2.3.0
 
 ## Ubudu Indoor Location SDK for Android
 
 For information on pricing, features, examples and our fantastic iBeacon compatible beacons please check our web-site
 [http://www.ubudu.com](http://www.ubudu.com). It is totally free to develop with Ubudu SDKs and we only charge usage... above a certain threshold.
 
-Indoor location provides a solution for mobile devices to estimate their position within an indoor venue. The position is computed in real time and then referenced to the map of the venue. The computation is based on the signal broadcasts received from beacons placed inside the venue. Users create their maps in the ubudu Manager and attach it to a particular venue.
+Indoor location provides a solution for mobile devices to estimate their position within an indoor venue. The position is computed in real time and then referenced to the map of the venue. The computation is based on the signal broadcasts received from beacons placed inside the venue as well as on the device's motion measured by available sensors.
 
-## Api reference
-[http://www.ubudu.com/docs/android/indoor_location_sdk/index.html](http://www.ubudu.com/docs/android/indoor_location_sdk/index.html)
+To start using Indoor Location SDK in the mobile app an Ubudu Application must be first defined in the [Manager Platform](http://manager.ubudu.com). To create an Indoor Location application please do the following:
+   
+-   open the `details` of one of the available venues in `Venues & indoor maps ` section or create a new venue and go to its `details` after creating it,
 
-## Docs
+-	click on the blue `Maps` button to go to the chosen venue's map section,
 
-More docs about using the Indoor Location SDK can be found in the Ubudu Knowledge Base:
+-   click `Add` butoon to start creating new map,
 
-[http://community.ubudu.com/help/kb/indoor-location](http://community.ubudu.com/help/kb/indoor-location)
+-	configure and save all the map's information according to the map creation tool. For more details please read the following articles:
+	-	[Setup indoor map](http://community.ubudu.com/help/kb/indoor-location/setup-indoor-map)
+	-	[Geo-referencing indoor map/floor](http://community.ubudu.com/help/kb/indoor-location/geo-referencing-indoor-mapfloor)
+	
+- 	when your maps are ready go to the `Applications` section,
+
+-	choose one of the applications and edit it,
+
+-	go to the bottom of the edit page till you see `Indoor Location venues` section where you can add available venues to your application,
+
+-	press `Update Application` button to save your changes.
+
+Once the application is ready its namespace uid has to be set in the SDK so it can fetch all data and start indoor positioning.
 
 ## Installing
 
-To use the library in an Android Studio project simply add:
+To use the library in an Android Studio project please do the following:
 
-	compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.2.3@aar') {
-        transitive = true }
+1) add the Ubudu nexus repository url to your build.gradle file:
 
-to your project dependencies and run gradle build.
+```
+    repositories {
+        mavenCentral()
+        maven { url 'http://nexus.ubudu.com:8081/nexus/content/groups/public/' }
+    }
+```
+
+2) then add the following dependency:
+
+```
+    dependencies {
+        compile('com.ubudu.sdk:ubudu-indoor-location-sdk:2.3.0@aar') {
+            transitive = true
+        }
+        // …
+    }
+```
 
 A jar file of the SDK is also available in the `/Ubudu-IndoorLocation-SDK` directory of this repository. To use it in your project (e.g. in Eclipse IDE) drop the jar file into the `libs` folder and configure the Java build path to include the library.
 
 ## Android application integration
 
-Indoor Location is available inside the Ubudu SDK. Before using it the SDK must be instantiated:
+To create an instance of the Indoor Location SDK use the following code: 
 
 	UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getApplicationContext());
+
+Next step is to set the application namespace (the visible uid String is just an example): 
+
+	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a2002cde");
+
+After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform.
+
+The `UbuduIndoorLocationManager` is the object to be used for indoor location configuration and start/stop. Its singleton instance is available after `UbuduIndoorLocationSDK` initialization. 
 	
-Indoor Location uses the delegate pattern to communicate with the application. Delegate class must implement `com.ubudu.indoorlocation.UbuduIndoorLocationDelegate` interface which defines all the events that must be handled by the application:
+	UbuduIndoorLocationManager mIndoorLocationManager = mSdk.getIndoorLocationManager();
+	
+Indoor Location SDK uses the delegate pattern to communicate with the application. Your delegate class must implement `com.ubudu.indoorlocation.UbuduIndoorLocationDelegate` interface which contains all the methods that must be handled by the application:
 
 	public class MyIndoorLocationDelegate implements UbuduIndoorLocationDelegate{ ... }
 	
-The `UbuduIndoorLocationManager` instance is available after `UbuduIndoorLocationSDK` initialization:
-	
-	MyIndoorLocationDelegate myIndoorLocationDelegate = new MyIndoorLocationDelegate(getApplicationContext());
-	UbuduIndoorLocationManager mIndoorLocationManager = mSdk.getIndoorLocationManager();
-	
-The delegate object must be then passed to the indoor location manager:
+The reference to the delegate object must be then set in the indoor location manager so the Indoor Location SDK can call its methods:
 
 	mIndoorLocationManager.setIndoorLocationDelegate(mIndoorLocationDelegate);
 	
-To use indoor location an Ubudu Application must be first defined in the Manager Platform. The namespace uid must be then provided at the SDK initialization stage. To create an Indoor Location application please do the following:
-
-- 	go to the Ubudu Manager Platform ([http://manager.ubudu.com]()),
-   
--   open details of one of the available venues (or create a new one) in `Venues & indoor maps ` section,
-
--	click on the `Maps` button and click `Add`,
-
--	configure and save all the map's information according to the map creation tool,
-
-- 	when your maps are ready go to the `Applications` section,
-
--	choose one of the applications and edit it,
-
--	go to the bottom of the edit page till you see `Indoor Location venues` section where you can add venues that have been created on your account to the application,
-
--	press `Update Application` button to save your changes.
-
-Once the application is ready its uid (namespace) is used by the mobile SDK to fetch all data and start indoor positioning. To plug the application to the Indoor Location SDK within your mobile app please to the following: 
-
-	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a9002cde");
-
-After calling the method above the application's data will be automatically downloaded from the Ubudu Manager Platform. To start the Indoor Location `start()` must be called:
+From this point the SDK can start its work. To start the positioning manager's `start()` method has to be called:
 
 	mIndoorLocationManager.start(new UbuduStartCallback() {
 	
@@ -89,101 +100,103 @@ After calling the method above the application's data will be automatically down
                 
             });
             	
-`failure()` callback is called when Indoor Location could not be started because of the network connection problems or corrupted map json file. `success()` callback is called when Indoor Location has been started successfully. Location events will be automatically passed to proper the delegate's methods. 
+`success()` callback is called when Indoor Location has been started successfully. Location events will be automatically passed to proper the delegate's methods. 
 
-To stop indoor location simply call:
+`failure()` callback is called when Indoor Location could not be started because of the network connection problems or corrupted map json file. 
+
+`restartedAfterContentAutoUpdated()` is called after each content auto update. SDK checks for indoor location application updates periodically (once per day and each application restart).
+
+If SDK should be stopped at some point please call the `stop()` method: 
 
 	mIndoorLocationManager.stop();
 	
-This method stops the bluetooth monitoring related to Indoor Location.
+This stops the bluetooth monitoring related to Ubudu Indoor Location.
 
-## Modifications
+## Features
 
-<table>
-<colgroup>
-<col width="12%" />
-<col width="14%" />
-<col width="16%" />
-<col width="56%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">Version</th>
-<th align="left">Date</th>
-<th align="left">Author</th>
-<th align="left">Modifications</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1.0.0</td>
-<td align="left">2016-01-05</td>
-<td align="left">MG</td>
-<td align="left">Created.</td>
-</tr>
-<tr class="odd">
-<td align="left">1.0.1</td>
-<td align="left">2016-01-14</td>
-<td align="left">MG</td>
-<td align="left">Changed public API pattern so the methods parameters names are understandable.</td>
-</tr>
-<tr class="odd">
-<td align="left">1.0.2</td>
-<td align="left">2016-01-16</td>
-<td align="left">MG</td>
-<td align="left">
-<p>Issues addressed:</p>
-<ul><li>fixed crashes which were happening if the current position was pointed inside all of the zones defined on the map,</li>
-<li>fixed a crash happening when the UbuduIndoorLocationDelegate instance has not been set and is null in the UbuduIndoorLocationManager.</li></ul>
-</td>
-</tr>
-<tr class="odd">
-<td align="left">2.1.0</td>
-<td align="left">2016-02-15</td>
-<td align="left">MG</td>
-<td align="left">
-<p>Features added:</p>
-<ul><li>automatic floors switching,</li>
-<li>remote content auto-update,</li>
-<li>API method allowing to choose if map overlays .png files should be fetched,</li>
-<li>API method to choose between using rectified or non-rectified indoor maps.</li></ul>
-<p>Improvements:</p>
-<ul><li>improved motion filtering to improve positioning stability.</li></ul>
-<p>Issues addressed:</p>
-<ul><li>improved stability when working with other Ubudu SDKs using beacon monitoring.</li></ul>
-</td>
-</tr>
-<tr class="odd">
-<td align="left">2.1.7</td>
-<td align="left">2016-02-17</td>
-<td align="left">MG</td>
-<td align="left">
-<p>Improvements:</p>
-<ul><li>removed unnecessary permissions from manifest</li>
-<li>improved remote content auto-update</li></ul>
-</td>
-</tr>
-<tr class="odd">
-<td align="left">2.2.3</td>
-<td align="left">2016-02-25</td>
-<td align="left">MG</td>
-<td align="left">
-<p>Features added:</p>
-<ul>
-<li>added azimuth updates to the delegate based on device sensors (compass)</li>
-</ul>
-<p>Improvements:</p>
-<ul>
-<li>improved the use of path finding algorithm for ommiting the non-navigable areas of the maps</li>
-<li>added timestamp to UbuduPositionUpdate object</li>
-<li>improved remote content auto-update stability</li></ul>
-<p>Issues addressed:</p>
-<ul><li>Fixed auto restart after device boot</li>
-<li>fixed few crashes</li></ul>
-</td>
-</tr>
-</tbody>
-</table>
+### Ranged beacons notifier
+
+It is possible to receive updates related to the beacons that are being ranged by the device. The returned beacons list will contain only the beacons that have been positioned on the map during its creation in the [Manager Platform](http://manager.ubudu.com).
+The `UbuduBeacon` object contains complete information about the beacon like:
+
+- `proximity uuid`, `major`, `minor` identifiers,
+- cartesian and geographical (only if the map has been properly georeferenced in the [Manager Platform](http://manager.ubudu.com)) coordinates,
+- latest `rssi` value, 
+- estimated distance to the beacon,
+- Bluetooth device name, mac address,
+- calibration tx power (power received 1 meter from the beacon with iPhone 5).
+
+### Automatic service restart
+
+Indoor location SDK works in the background and is restarted automatically after the app has been killed by the user/system or on device boot. The application's object implementing `UbuduIndoorLocationDelegate` must be initialized properly each time Indoor Location SDK is started. The app has to register a receiver with an intent filter for `ACTION_SERVICE_RESTARTED` action that is broadcasted by the SDK service on restart. The receiver can be registered in the app's manifest file:
+
+	<receiver android:name=".ubudu.UbuduServiceRestartedReceiver">
+		<intent-filter>
+			<action android:name="ACTION_SERVICE_RESTARTED" />
+		</intent-filter>
+    </receiver>
+
+where `UbuduServiceRestartedReceiver` is just an example class extending `android.content.BroadcastReceiver` that can look like the following:
+
+	public class UbuduServiceRestartedReceiver extends BroadcastReceiver {
+	
+		private static final String TAG = "UbuduServiceRestartedReceiver";
+	
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// the delegate's instance should be created and then set in the Indoor Location SDK:
+			UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(context);
+			MyIndoorLocationDelegate mIndoorLocationDelegate = new MyIndoorLocationDelegate();
+			UbuduIndoorLocationManager mIndoorLocationManager = mSdk.getIndoorLocationManager();
+			mIndoorLocationManager.setIndoorLocationDelegate(mIndoorLocationDelegate);
+			// ...
+		}
+	}
+
+### Indoor location map overlay image
+
+The image that has been used to create a map in the [Manager Platform](http://manager.ubudu.com) can be retrieved in the mobile app e.g. for display purposes. It is possible to get an `java.io.InputStream` object with the map image:
+
+	InputStream mapOverlayImageInputStream = mIndoorLocationManager.getCurrentMapOverlayInputStream();
+
+### Compass
+
+The SDK uses built in motion and magnetic field sensors to calculate the compass bearing. To receive bearing updates in the mobile application an `UbuduCompassListener` has to be used:
+
+	mIndoorLocationManager.setCompassListener(new UbuduCompassListener() {
+		@Override
+		public void azimuthUpdated(float azimuth) {
+			// ...
+		}
+	});
+	
+Note: The magnetic sensor available in Android devices is not always accurate and demands simple calibration that can be done when the app is running:
+
+1. Tilt your phone forward and back,
+2. Move it side to side,
+3. And then tilt left and right,
+4. You may need to repeat the steps until your compass is calibrated.
+
+	![](docs_images/compass_calibration.gif)
+	
+	Image and instructions come from [support.google.com](https://support.google.com/gmm/answer/6145351?hl=en).
+
+### Indoor Map Tiles support
+
+Ubudu Indoor Location provides tiles support for displaying the map defined in the [Manager Platform](http://manager.ubudu.com). To get the current map's tiles base url call the following method:
+
+	mIndoorLocationManager.map().getTilesBaseUrl()
+
+This is the tiles URL in a standard format that is supported e.g. by google maps API.
+
+## Api reference
+[http://www.ubudu.com/docs/android/indoor_location_sdk/index.html](http://www.ubudu.com/docs/android/indoor_location_sdk/index.html)
+
+## Docs
+
+More detailed docs about Indoor Location SDK can be found in the Ubudu Knowledge Base:
+
+[http://community.ubudu.com/help/kb/indoor-location](http://community.ubudu.com/help/kb/indoor-location)
 
 ## Authors:
 

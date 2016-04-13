@@ -27,6 +27,7 @@ To start using Indoor Location SDK in the mobile app an Ubudu Application must b
 
 -	press `Update Application` button to save your changes.
 
+
 Once the application is ready its namespace uid has to be set in the SDK so it can fetch all data and start indoor positioning.
 
 ## Installing

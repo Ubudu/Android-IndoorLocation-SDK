@@ -115,6 +115,12 @@ This stops the bluetooth monitoring related to Ubudu Indoor Location.
 
 ## Features
 
+### Enhanced motion sensor positioning
+
+Ubudu Indoor Location SDK leverages on an advanced motion sensor data processing to improve the positioning accuracy. The particle filtering approach is used to calculate more precise position by combining the Bluetooth based calculations with motion sensors data. To turn on this improved positioning mode call the following code:
+
+	mIndoorLocationManager.setParticleFilteringEnabled(true);
+
 ### Ranged beacons notifier
 
 It is possible to receive updates related to the beacons that are being ranged by the device. The returned beacons list will contain only the beacons that have been positioned on the map during its creation in the [Manager Platform](http://manager.ubudu.com).

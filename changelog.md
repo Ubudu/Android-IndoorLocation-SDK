@@ -26,6 +26,7 @@
 <ul>
 <li>added a method to the `UbuduMap` to convert `(lat,lng)` geographical coordinates to `(x,y)` cartesian coordinates on the map image</li>
 <li>added tiles support for indoor location maps</li>
+<li>added Ubudu application secured mode handling</li>
 </ul>
 <p>Improvements:</p>
 <ul>

@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.ubudu.indoorlocation.UbuduBeacon;
+import com.ubudu.indoorlocation.UbuduCoordinates2D;
 import com.ubudu.sampleapp.map.storage.AppFileSystemUtil;
 
 import java.io.File;
@@ -72,6 +73,8 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
     private String overlayUuid;
 
     private Marker clickedPositionMarker;
+
+    private LatLngBounds mapBounds;
 
     /**
      * Constructor
@@ -519,13 +522,39 @@ public class Map implements GoogleMap.OnMapLoadedCallback {
                 try {
                     int ymax = 1 << zoom;
                     int y_m = ymax-y-1;
-                    return new URL(tilesUrlBase.replace("{z}", "" + zoom).replace("{x}", "" + x)
-                            .replace("{y}", "" + y_m)).toString();
+                    UbuduCoordinates2D s_w =  Mercator.fromPixelTo2DCoordinates(x*256, (y+1)*256, zoom);
+                    UbuduCoordinates2D n_e =  Mercator.fromPixelTo2DCoordinates((x+1)*256, y*256, zoom);
+                    LatLngBounds tileBounds = new LatLngBounds(new LatLng(s_w.latitude(),s_w.longitude()), new LatLng(n_e.latitude(),n_e.longitude()));
+                    String url = "http://imagescdn.ubudu.com/u_maps_tiles/none.png";
+                    if(intersects(tileBounds, mapBounds)){
+                        return new URL(tilesUrlBase.replace("{z}", "" + zoom).replace("{x}", "" + x)
+                                .replace("{y}", "" + y_m)).toString();
+                    }
+                    return url;
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
                 return null;
             }
         }.createTileOverlayOptions()).setZIndex(-1f);
+    }
+
+    /**
+     * Check whether bounds1 intersects with bounds2.
+     *
+     * @param bounds1 The bounds to check
+     * @param bounds2 The bounds to check
+     * @return true if the given bounds intersect themselves, false otherwise
+     */
+    public boolean intersects(LatLngBounds bounds1, LatLngBounds bounds2) {
+        final boolean latIntersects = (bounds1.northeast.latitude >= bounds2.southwest.latitude) && (bounds1.southwest.latitude <= bounds2.northeast.latitude);
+        final boolean lngIntersects = (bounds1.northeast.longitude >= bounds2.southwest.longitude) && (bounds1.southwest.longitude <= bounds2.northeast.longitude);
+        return latIntersects && lngIntersects;
+    }
+
+    public void setMapOverlayBounds(LatLng southWest, LatLng northEast) {
+        mapBounds = new LatLngBounds(
+                southWest,       // South west image corner
+                northEast);      // North east image corner
     }
 }

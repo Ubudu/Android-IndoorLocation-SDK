@@ -62,7 +62,7 @@ public class UbuduManager {
         mIndoorLocationDelegate = new IndoorLocationDelegate(this);
 
         UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getAppContext());
-        mSdk.setNamespace("7c62cb6cc409004dc879f3fd7c4d838f0d07dbc8");
+        mSdk.setNamespace("d9f69da789bdf00c99924af58f811e44b5c89ee5");
 
         mIndoorLocationManager = mSdk.getIndoorLocationManager();
 

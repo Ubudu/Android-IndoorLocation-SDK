@@ -18,6 +18,18 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.3.1</td>
+<td align="left">2016-04-29</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>added POI handling. List of available map POIs is now available via UbuduMap's `getPois()` method</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.3.0</td>
 <td align="left">2016-04-12</td>
 <td align="left">MG</td>

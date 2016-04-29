@@ -271,6 +271,13 @@ public class MainActivity extends AppCompatActivity implements MapInterface {
             mLocationMap.setLoadedMapUuid(null);
             // reset map
             mLocationMap.reset();
+
+            UbuduCoordinates2D bottomRightAnchorCoordinates = mUbuduManager.bottomRightAnchorCoordinates().toDeg();
+            UbuduCoordinates2D topLeftAnchorCoordinates = mUbuduManager.topLeftAnchorCoordinates().toDeg();
+            // Set overlay image bounds
+            mLocationMap.setMapOverlayBounds(new LatLng(bottomRightAnchorCoordinates.latitude(), topLeftAnchorCoordinates.longitude()),
+                    new LatLng(topLeftAnchorCoordinates.latitude(), bottomRightAnchorCoordinates.longitude()));
+
             mLocationMap.setTilesBaseUrl(tilesUrlBase);
         }
         mMapEventListener.onMapReady();

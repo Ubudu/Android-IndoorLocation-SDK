@@ -1,4 +1,4 @@
-# Android-IndoorLocation-SDK - version 2.3.0
+# Android-IndoorLocation-SDK - version 2.3.1
 
 ## Ubudu Indoor Location SDK for Android
 
@@ -47,7 +47,7 @@ To use the library in an Android Studio project please do the following:
 
 ```
     dependencies {
-        compile('com.ubudu.sdk:ubudu-indoor-location-sdk:2.3.0@aar') {
+        compile('com.ubudu.sdk:ubudu-indoor-location-sdk:2.3.1@aar') {
             transitive = true
         }
         // …

@@ -47,7 +47,7 @@ To use the library in an Android Studio project please do the following:
 
 ```
     dependencies {
-        compile('com.ubudu.sdk:ubudu-indoor-location-sdk:2.3.1@aar') {
+        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.3.1@aar') {
             transitive = true
         }
         // …

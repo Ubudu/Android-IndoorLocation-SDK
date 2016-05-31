@@ -18,6 +18,31 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.4.1</td>
+<td align="left">2016-05-31</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>added a listener interface to a `setNamespace` method so the app is notified about the application data fetching result</li>
+<li>added an `ext_level` field to `UbuduMap` object. This field has be set in the Ubudu Manager Platform and is useful for handling the integration of Ubudu Indoor Location SDK with various indoor map display providers</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>improved motion data processing by introducing an earth reference frame</li>
+<li>bluetooth and motion data fusion mode is now turned on by default</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed indoor positioning randomly switching floors when working with beacons in secured mode</li>
+<li>fixed application data fetching</li>
+<li>fixed OutOfMemoryError when processing very huge map on some low resources Android devices</li>
+<li>fixed last position not fully reseted when floor is changed</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.3.1</td>
 <td align="left">2016-04-29</td>
 <td align="left">MG</td>

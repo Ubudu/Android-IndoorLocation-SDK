@@ -1,6 +1,4 @@
-# Android-IndoorLocation-SDK - version 2.3.1
-
-## Ubudu Indoor Location SDK for Android
+# Android-IndoorLocation-SDK - version 2.4.1
 
 For information on pricing, features, examples and our fantastic iBeacon compatible beacons please check our web-site
 [http://www.ubudu.com](http://www.ubudu.com). It is totally free to develop with Ubudu SDKs and we only charge usage... above a certain threshold.
@@ -47,7 +45,7 @@ To use the library in an Android Studio project please do the following:
 
 ```
     dependencies {
-        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.3.1@aar') {
+        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.4.1@aar') {
             transitive = true
         }
         // …
@@ -64,9 +62,19 @@ To create an instance of the Indoor Location SDK use the following code:
 
 Next step is to set the application namespace (the visible uid String is just an example): 
 
-	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a2002cde");
+	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a2002cde", new UbuduSetNamespaceResultListener() {
+        @Override
+        public void success() {
+            printf("Application data fetched and ready.");
+        }
 
-After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform.
+        @Override
+        public void error() {
+            printf("Application data could not be fetched due to a network error.");
+        }
+	);
+
+After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform and proper callback of the `UbuduSetNamespaceResultListener` will be called when finished.
 
 The `UbuduIndoorLocationManager` is the object to be used for indoor location configuration and start/stop. Its singleton instance is available after `UbuduIndoorLocationSDK` initialization. 
 	
@@ -115,12 +123,6 @@ This stops the bluetooth monitoring related to Ubudu Indoor Location.
 
 ## Features
 
-### Enhanced motion sensor positioning
-
-Ubudu Indoor Location SDK leverages on an advanced motion sensor data processing to improve the positioning accuracy. The particle filtering approach is used to calculate more precise position by combining the Bluetooth based calculations with motion sensors data. To turn on this improved positioning mode call the following code:
-
-	mIndoorLocationManager.setParticleFilteringEnabled(true);
-
 ### Ranged beacons notifier
 
 It is possible to receive updates related to the beacons that are being ranged by the device. The returned beacons list will contain only the beacons that have been positioned on the map during its creation in the [Manager Platform](http://manager.ubudu.com).
@@ -160,7 +162,21 @@ where `UbuduServiceRestartedReceiver` is just an example class extending `androi
 		}
 	}
 
-### Indoor location map overlay image
+### Displaying the indoor map
+
+#### Tiles
+
+Ubudu Indoor Location provides tiles support for displaying the map configured in the [Manager Platform](http://manager.ubudu.com). To get the current map's tiles base url call the following method:
+
+	mIndoorLocationManager.map().getTilesBaseUrl()
+	
+The url's template is as follows:
+
+	https://imagesd.ubudu.com/u_maps_tiles/{MAP_UUID}/{z}/{x}/{y}.png
+
+This is the tiles URL in a standard format that is supported e.g. by Google Maps API. For more details please see [this](https://developers.google.com/android/reference/com/google/android/gms/maps/model/TileOverlay).
+
+#### Original map overlay file
 
 The image that has been used to create a map in the [Manager Platform](http://manager.ubudu.com) can be retrieved in the mobile app e.g. for display purposes. It is possible to get an `java.io.InputStream` object with the map image:
 
@@ -187,14 +203,6 @@ Note: The magnetic sensor available in Android devices is not always accurate an
 	![](docs_images/compass_calibration.gif)
 	
 	Image and instructions come from [support.google.com](https://support.google.com/gmm/answer/6145351?hl=en).
-
-### Indoor Map Tiles support
-
-Ubudu Indoor Location provides tiles support for displaying the map defined in the [Manager Platform](http://manager.ubudu.com). To get the current map's tiles base url call the following method:
-
-	mIndoorLocationManager.map().getTilesBaseUrl()
-
-This is the tiles URL in a standard format that is supported e.g. by google maps API.
 
 ## Api reference
 [http://www.ubudu.com/docs/android/indoor_location_sdk/index.html](http://www.ubudu.com/docs/android/indoor_location_sdk/index.html)

@@ -13,6 +13,7 @@ import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 import com.ubudu.indoorlocation.UbuduMap;
 import com.ubudu.indoorlocation.UbuduPoint;
 import com.ubudu.indoorlocation.UbuduRangedBeaconsNotifier;
+import com.ubudu.indoorlocation.UbuduSetNamespaceResultListener;
 import com.ubudu.indoorlocation.UbuduStartCallback;
 import com.ubudu.indoorlocation.UbuduZone;
 import com.ubudu.sampleapp.map.MapInterface;
@@ -28,9 +29,6 @@ import static com.ubudu.sampleapp.MyApplication.getAppContext;
 public class UbuduManager {
 
     private static final String TAG = "UbuduManager";
-
-    private static boolean USE_PARTICLE_FILTERING = true;
-
     private static UbuduManager instance;
 
     private IndoorLocationDelegate mIndoorLocationDelegate;
@@ -62,13 +60,21 @@ public class UbuduManager {
         mIndoorLocationDelegate = new IndoorLocationDelegate(this);
 
         UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getAppContext());
-        mSdk.setNamespace("d9f69da789bdf00c99924af58f811e44b5c89ee5");
+        mSdk.setNamespace("7c62cb6cc409004dc879f3fd7c4d838f0d07dbc8", new UbuduSetNamespaceResultListener() {
+            @Override
+            public void success() {
+                printf("Ubudu application data fetched and ready.");
+            }
+
+            @Override
+            public void error() {
+                printf("Ubudu application fetching error.");
+            }
+        });
 
         mIndoorLocationManager = mSdk.getIndoorLocationManager();
 
-        mIndoorLocationManager.setParticleFilteringEnabled(USE_PARTICLE_FILTERING);
         mIndoorLocationManager.setIndoorLocationDelegate(mIndoorLocationDelegate);
-        //mIndoorLocationManager.loadMapFromAssetsFile(MAP_FILE_NAME);
         mIndoorLocationManager.setAutomaticServiceRestart(false);
         mIndoorLocationManager.setRangingScanPeriods(800, 1100);
         mIndoorLocationManager.setRangingBetweenScanPeriods(300, 200);

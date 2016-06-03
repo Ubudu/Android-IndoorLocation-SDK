@@ -60,9 +60,11 @@ To create an instance of the Indoor Location SDK use the following code:
 
 	UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getApplicationContext());
 
+### Setting namespace
+
 Next step is to set the application namespace (the visible uid String is just an example): 
 
-	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a2002cde", new UbuduSetNamespaceResultListener() {
+	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a2002cde", new UbuduResultListener() {
         @Override
         public void success() {
             printf("Application data fetched and ready.");
@@ -75,6 +77,32 @@ Next step is to set the application namespace (the visible uid String is just an
 	);
 
 After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform and proper callback of the `UbuduSetNamespaceResultListener` will be called when finished.
+
+### Embedding application data files
+
+There is an option to embedd the applications data so no internet connection is needed at first launch of the app. This can be done by calling the following method in the `success()` callback of `UbuduResultListener` interface:
+
+	mSdk.exportApplicationDataToExternalStorage();
+
+After calling this method all the data files already fetched from the Ubudu Manager Platform are exported to the external storage of the device (sd card). The data is saved into `ubudu_indoor_location` directory. The whole folder should be then moved to your Android Studio project's assets directory:
+
+![](docs_images/assets.jpg =400x)
+
+When the data files are in the right place they can be preloaded into the Ubudu Indoor Location SDK. To do this the other type of `setNamespace` method has to be used:
+
+	mSdk.setNamespace("1843291458ae318c504ab93bbd2cdd68a2002cde", "ubudu_indoor_location", new UbuduResultListener() {
+        @Override
+        public void success() {
+            printf("Application data loaded and ready.");
+        }
+
+        @Override
+        public void error() {
+            printf("Application data could not be loaded.");
+        }
+	);
+	
+The 2nd parameter of the method above is the String name of the folder that you placed in your app's assets folder.
 
 The `UbuduIndoorLocationManager` is the object to be used for indoor location configuration and start/stop. Its singleton instance is available after `UbuduIndoorLocationSDK` initialization. 
 	

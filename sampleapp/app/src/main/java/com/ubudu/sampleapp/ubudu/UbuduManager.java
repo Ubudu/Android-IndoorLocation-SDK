@@ -13,7 +13,7 @@ import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 import com.ubudu.indoorlocation.UbuduMap;
 import com.ubudu.indoorlocation.UbuduPoint;
 import com.ubudu.indoorlocation.UbuduRangedBeaconsNotifier;
-import com.ubudu.indoorlocation.UbuduSetNamespaceResultListener;
+import com.ubudu.indoorlocation.UbuduResultListener;
 import com.ubudu.indoorlocation.UbuduStartCallback;
 import com.ubudu.indoorlocation.UbuduZone;
 import com.ubudu.sampleapp.map.MapInterface;
@@ -60,7 +60,7 @@ public class UbuduManager {
         mIndoorLocationDelegate = new IndoorLocationDelegate(this);
 
         UbuduIndoorLocationSDK mSdk = UbuduIndoorLocationSDK.getSharedInstance(getAppContext());
-        mSdk.setNamespace("7c62cb6cc409004dc879f3fd7c4d838f0d07dbc8", new UbuduSetNamespaceResultListener() {
+        mSdk.setNamespace("7c62cb6cc409004dc879f3fd7c4d838f0d07dbc8", new UbuduResultListener() {
             @Override
             public void success() {
                 printf("Ubudu application data fetched and ready.");

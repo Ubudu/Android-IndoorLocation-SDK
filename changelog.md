@@ -18,6 +18,19 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.4.2</td>
+<td align="left">2016-06-03</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>added API to embed the indoor location data files into the application so no internet connection is needed on first launch</li>
+</ul>
+</td>
+</tr>
+
+
+<tr class="odd">
 <td align="left">2.4.1</td>
 <td align="left">2016-05-31</td>
 <td align="left">MG</td>

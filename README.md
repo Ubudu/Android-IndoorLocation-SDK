@@ -86,7 +86,7 @@ There is an option to embedd the applications data so no internet connection is 
 
 After calling this method all the data files already fetched from the Ubudu Manager Platform are exported to the external storage of the device (sd card). The data is saved into `ubudu_indoor_location` directory. The whole folder should be then moved to your Android Studio project's assets directory:
 
-![](docs_images/assets.jpg =400x)
+![](docs_images/assets.png =400x)
 
 When the data files are in the right place they can be preloaded into the Ubudu Indoor Location SDK. To do this the other type of `setNamespace` method has to be used:
 

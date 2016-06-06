@@ -76,7 +76,7 @@ Next step is to set the application namespace (the visible uid String is just an
         }
 	);
 
-After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform and proper callback of the `UbuduSetNamespaceResultListener` will be called when finished.
+After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform and proper callback of the `UbuduResultListener` will be called when finished.
 
 ### Embedding application data files
 

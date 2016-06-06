@@ -18,6 +18,19 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.4.3</td>
+<td align="left">2016-06-06</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Issues addressed:</p>
+<ul>
+<li>motion sensors related crash on some Samsung devices with Android 4.3</li>
+<li>motion based position update bug causing unstable position changes</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.4.2</td>
 <td align="left">2016-06-03</td>
 <td align="left">MG</td>

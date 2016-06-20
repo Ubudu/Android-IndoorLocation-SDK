@@ -29,7 +29,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.4.3@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.4.4@aar') {
         transitive = true
     }
 

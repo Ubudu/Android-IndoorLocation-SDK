@@ -38,28 +38,30 @@ public class IndoorLocationDelegate implements UbuduIndoorLocationDelegate {
         mManager = manager;
     }
 
-    @SuppressLint("LongLogTag")
     @Override
     public void positionChanged(UbuduPositionUpdate ubuduPositionUpdate) {
         if (mManager.mapDisplayReady()) {
             if (ubuduMap != null) {
-                if (lastPosition != null && !mManager.shouldReset() && lastPosition.getLevel() == ubuduPositionUpdate.getEstimatedPosition().getLevel()) {
-                    currentSmoothedPositionNavPoint = ubuduMap.getClosestNavigablePointFromPosition(ubuduPositionUpdate.getSmoothedPosition().getCartesianCoordinates());
-                    path = ubuduMap.path(lastPosition.getCartesianCoordinates(), currentSmoothedPositionNavPoint);
-                    if (path != null) {
-                        List<LatLng> pathGeoCoords = new ArrayList<>();
-                        Iterator<UbuduPoint> iter = path.iterator();
-                        UbuduCoordinates2D geoCoords;
-                        while (iter.hasNext()) {
-                            geoCoords = mIndoorLocationManager.map().geoCoordinates(iter.next());
-                            pathGeoCoords.add(new LatLng(geoCoords.latitude(), geoCoords.longitude()));
+                if (!ubuduPositionUpdate.getUpdateOrigin().equals(UbuduPositionUpdate.UPDATE_ORIGIN_GPS)) {
+                    if (lastPosition != null && !mManager.shouldReset() && lastPosition.getLevel() == ubuduPositionUpdate.getEstimatedPosition().getLevel()) {
+                        currentSmoothedPositionNavPoint = ubuduMap.getClosestNavigablePointFromPosition(ubuduPositionUpdate.getSmoothedPosition().getCartesianCoordinates());
+                        path = ubuduMap.path(lastPosition.getCartesianCoordinates(), currentSmoothedPositionNavPoint);
+                        if (path != null) {
+                            List<LatLng> pathGeoCoords = new ArrayList<>();
+                            Iterator<UbuduPoint> iter = path.iterator();
+                            UbuduCoordinates2D geoCoords;
+                            while (iter.hasNext()) {
+                                geoCoords = mIndoorLocationManager.map().geoCoordinates(iter.next());
+                                pathGeoCoords.add(new LatLng(geoCoords.latitude(), geoCoords.longitude()));
+                            }
+                            mManager.drawPath(pathGeoCoords);
                         }
-                        mManager.drawPath(pathGeoCoords);
                     }
                 }
-                lastPosition = ubuduPositionUpdate.getClosestNavigablePoint();
-
-                android.util.Log.i(TAG,"new pos: "+lastPosition.getGeographicalCoordinates().toString());
+                if (!ubuduPositionUpdate.getUpdateOrigin().equals(UbuduPositionUpdate.UPDATE_ORIGIN_GPS)) {
+                    lastPosition = ubuduPositionUpdate.getClosestNavigablePoint();
+                } else
+                    lastPosition = ubuduPositionUpdate.getEstimatedPosition();
 
                 mManager.setLocationOnMap(lastPosition.getGeographicalCoordinates().latitude(), lastPosition.getGeographicalCoordinates().longitude());
                 mManager.reseted();

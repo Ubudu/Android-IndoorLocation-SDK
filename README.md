@@ -1,4 +1,4 @@
-# Android-IndoorLocation-SDK - version 2.4.3
+# Android-IndoorLocation-SDK - version 2.4.4
 
 For information on pricing, features, examples and our fantastic iBeacon compatible beacons please check our web-site
 [http://www.ubudu.com](http://www.ubudu.com). It is totally free to develop with Ubudu SDKs and we only charge usage... above a certain threshold.
@@ -45,7 +45,7 @@ To use the library in an Android Studio project please do the following:
 
 ```
     dependencies {
-        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.4.3@aar') {
+        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.4.4@aar') {
             transitive = true
         }
         // …
@@ -243,7 +243,7 @@ More detailed docs about Indoor Location SDK can be found in the Ubudu Knowledge
 
 ## Authors:
 
--   MG: Michal Gasztold \<<michal.gasztold@ubudu.biz>\>
+-   MG: Michal Gasztold \<<michal.gasztold@ubudu.com>\>
 
 ## Legal status:
 

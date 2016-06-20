@@ -18,6 +18,22 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.4.4</td>
+<td align="left">2016-06-20</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added</p>
+<ul>
+<li>GPS integration</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed an issue of position getting lost sometimes and moving in wrong directions</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.4.3</td>
 <td align="left">2016-06-06</td>
 <td align="left">MG</td>

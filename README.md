@@ -84,7 +84,15 @@ There is an option to embedd the applications data so no internet connection is 
 
 	mSdk.exportApplicationDataToExternalStorage();
 
-After calling this method all the data files already fetched from the Ubudu Manager Platform are exported to the external storage of the device (sd card). The data is saved into `ubudu_indoor_location` directory. The whole folder should be then moved to your Android Studio project's assets directory:
+After calling this method all the data files already fetched from the Ubudu Manager Platform are exported to the external storage of the device (sd card). The data is saved into `ubudu_indoor_location` directory. 
+
+	**NOTE**: To use this feature in your build you need to add the following permission in the  manifest:
+
+	`<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />`
+
+	Otherwise the SDK will not be able to write to external storage in which the indoor location application data files are exported. After you get all the files you need the permission and the `mSdk.exportApplicationDataToExternalStorage()` method call can be removed.
+
+The whole folder with the map data files should be moved to your Android Studio project's assets directory:
 
 ![](docs_images/assets.png)
 

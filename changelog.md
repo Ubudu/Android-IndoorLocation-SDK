@@ -18,6 +18,23 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.5.0</td>
+<td align="left">2016-07-20</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added</p>
+<ul>
+<li>added boolean isMoving() method to UbuduIndoorLocationManager object to be able to determine if the user is moving or not on the app side</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>improved positioning stability</li>
+<li>improved the accuracy of BLE/GPS switching</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.4.4</td>
 <td align="left">2016-06-20</td>
 <td align="left">MG</td>

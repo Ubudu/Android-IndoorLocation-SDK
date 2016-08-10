@@ -18,6 +18,18 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.5.1</td>
+<td align="left">2016-08-09</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Issues addressed:</p>
+<ul>
+<li>fixed ANRs happening on Android M when scanning is triggered while app does not have geolocation permissions</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.5.0</td>
 <td align="left">2016-07-20</td>
 <td align="left">MG</td>

@@ -18,6 +18,24 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.5.2</td>
+<td align="left">2016-08-26</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>delegate's zonesChanged now never gives null list in the argument</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed a bug when sometimes there was no switch to GPS after going outside the building</li>
+<li>fixed a bug when sometimes there was no back switch to BLE after coming back to the building</li>
+<li>fixed a bug of self permissions check being triggered even if device was Android M. This was causing crash if the target app was using google support-v4 lib version older than 23</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.5.1</td>
 <td align="left">2016-08-09</td>
 <td align="left">MG</td>

@@ -45,7 +45,7 @@ To use the library in an Android Studio project please do the following:
 
 ```
     dependencies {
-        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.5.1@aar') {
+        compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.5.2@aar') {
             transitive = true
         }
         // …
@@ -77,6 +77,8 @@ Next step is to set the application namespace (the visible uid String is just an
 	);
 
 After calling the above method all application's data will be automatically downloaded from the Ubudu Manager Platform and proper callback of the `UbuduResultListener` will be called when finished.
+
+*Note!* In the public demo application available on this repository please add your namespace in the `com.ubudu.sampleapp.ubudu.UbuduManager` class in line 63.
 
 ### Embedding application data files
 

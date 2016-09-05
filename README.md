@@ -1,4 +1,4 @@
-# Android-IndoorLocation-SDK - version 2.5.1
+# Android-IndoorLocation-SDK - version 2.5.2
 
 For information on pricing, features, examples and our fantastic iBeacon compatible beacons please check our web-site
 [http://www.ubudu.com](http://www.ubudu.com). It is totally free to develop with Ubudu SDKs and we only charge usage... above a certain threshold.

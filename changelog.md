@@ -18,6 +18,30 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.5.3</td>
+<td align="left">2016-10-03</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>added color property to UbuduZone object. This color can be defined in the Ubudu manager platform map creation tool.</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>delegate's zonesChanged now never gives null list in the argument</li>
+<li>GPS position update has now also closest zone and current zones list if available</li>
+<li>Added few debug logs to logcat to help developers debugging integration code</li>
+<li>various fixes and stability improvements</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed GPS position not being returned when no beacons are visible after app launch</li>
+</ul>
+</td>
+</tr>
+
+
+<tr class="odd">
 <td align="left">2.5.2</td>
 <td align="left">2016-08-26</td>
 <td align="left">MG</td>

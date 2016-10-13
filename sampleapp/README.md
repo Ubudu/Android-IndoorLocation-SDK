@@ -4,7 +4,7 @@ Public Android Studio application sample project is intended to guide the develo
 
 At first launch user is asked to provide the `namespace` of the Ubudu application with which the app should work. `namespace` can be typed/pasted manually or provided by scanning the QR code that can be found in Ubudu Manager Platform. 
 
-<img src="app_first_view.png" style="width: 300px;"/>
+<img src="app_first_view.png" width="300"/>
 
 The navigation to particular application's details within the Ubudu Manager Platform website where the QR code is displayed is presented on the screenshots below:
 

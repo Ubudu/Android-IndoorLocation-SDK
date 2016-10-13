@@ -1,0 +1,79 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'android-apt'
+
+repositories {
+    maven { url 'http://nexus.ubudu.com:8081/nexus/content/groups/public/' }
+    jcenter()
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.3"
+
+    defaultConfig {
+        applicationId "com.ubudu.ilapp2"
+        minSdkVersion 18
+        targetSdkVersion 24
+        versionCode 5
+        versionName "1.3"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+
+    //preferences
+    compile 'com.takisoft.fix:preference-v7:24.2.1.0'
+
+    testCompile 'junit:junit:4.12'
+
+    // map layout
+    compile project(':ubudumaplayout')
+
+    // IL SDK
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.6.0@aar') {
+        transitive = true;
+    }
+
+    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+
+    // butter knife
+    compile 'com.jakewharton:butterknife:8.1.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+
+    // bottom menu
+    compile 'com.roughike:bottom-bar:2.0.2'
+
+    // qr scanner
+    compile 'me.dm7.barcodescanner:zxing:1.8.4'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+
+}

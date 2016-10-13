@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryLight">#11ffffff</color>
+    <color name="colorPrimaryDark">#505052</color>
+    <color name="colorAccent">#FF2399DA</color>
+    <color name="colorAccentLight">#112399DA</color>
+    <color name="button_off">#8b8b8b</color>
+    <color name="colorWarning">#EE2628</color>
+    <color name="button_on">#20BA95</color>
+
+    <color name="darkTextColor">#252525</color>
+
+    <color name="log_bg">#80a5c4e1</color>
+
+    <color name="red">#4285F4</color>
+
+    <color name="black_transparent">#993B4853</color>
+    <color name="fully_transparent">#00000000</color>
+    <color name="partially_transparent">#33ffffff</color>
+</resources>

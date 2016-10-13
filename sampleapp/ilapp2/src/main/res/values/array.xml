@@ -1,0 +1,6 @@
+<resources>
+    <string-array name="namespace_input_type">
+        <item>Type in manually</item>
+        <item>Scan QR code</item>
+    </string-array>
+</resources>

@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Ubudu IL</string>
+    <string name="button_yes">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="radar">Radar</string>
+    <string name="choose_namespace_input_type">Choose namespace input type:</string>
+    <string name="input_type_namespace_hint">Set namespace</string>
+    <string name="input_prefill"></string>
+
+    <string name="title_change_application">Change application namespace</string>
+    <string name="summary_change_application">This option allows to switch to different application</string>
+
+    <string name="permissions">Manage permissions</string>
+
+    <string name="summary_geoloc_permission">Toggle location services</string>
+    <string name="title_geoloc_permission">Geolocation</string>
+    <string name="title_app_infos">App Info</string>
+    <string name="title_app_version">App version</string>
+    <string name="title_indoorlocation_sdk_version">Ubudu Indoor Location SDK version</string>
+
+</resources>

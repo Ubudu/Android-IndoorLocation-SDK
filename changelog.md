@@ -37,7 +37,7 @@
 </ul>
 <p>Issues addressed:</p>
 <ul>
-<li>fixed UbuduSetNamespaceListener callbacks not being called on main thread</li>
+<li>* fixed UbuduResultListener callbacks for setNamespace method being called not on a main thread</li>
 </ul>
 </td>
 </tr>

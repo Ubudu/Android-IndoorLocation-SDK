@@ -18,6 +18,31 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.6.0</td>
+<td align="left">2016-10-13</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>API change: from version 2.6.0 the SDK does not fetch non rectified maps from Ubudu BO by default</li>
+<li>add static int getVersionCode() API method to UbuduIndoorLocationSDK class</li>
+<li>add Integer getLevel() API method to UbuduMap class. So far there was only String getExternalLevel() method available which was not enough in some use cases.</li>
+<li>add UbuduPosition getLastKnownPosition() API method to UbuduIndoorLocationManager class</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>reduced lag of getting initial position after SDK start and on floor switching</li>
+<li>app's delegate gets notified about map being changed to null after 15 seconds of user being outdoor</li>
+<li>various fixes and stability improvements</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed UbuduSetNamespaceListener callbacks not being called on main thread</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.5.3</td>
 <td align="left">2016-10-03</td>
 <td align="left">MG</td>

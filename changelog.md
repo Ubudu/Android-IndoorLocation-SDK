@@ -18,6 +18,22 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.6.1</td>
+<td align="left">2016-10-26</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>Refactored some of the initialization info logs to be more informative for developers</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed map data not being updated properly in some cases</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.6.0</td>
 <td align="left">2016-10-13</td>
 <td align="left">MG</td>
@@ -37,7 +53,7 @@
 </ul>
 <p>Issues addressed:</p>
 <ul>
-<li>* fixed UbuduResultListener callbacks for setNamespace method being called not on a main thread</li>
+<li>fixed UbuduResultListener callbacks for setNamespace method being called not on a main thread</li>
 </ul>
 </td>
 </tr>

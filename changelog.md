@@ -18,6 +18,19 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.6.2</td>
+<td align="left">2016-10-26</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Issues addressed:</p>
+<ul>
+<li>fixed crash occuring during content auto update when some map has been removed from BO</li>
+</ul>
+</td>
+</tr>
+
+
+<tr class="odd">
 <td align="left">2.6.1</td>
 <td align="left">2016-10-26</td>
 <td align="left">MG</td>

@@ -18,6 +18,19 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.6.3</td>
+<td align="left">2016-11-15</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>updated REST API library</li>
+<li>updated BLE scanner library</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.6.2</td>
 <td align="left">2016-10-26</td>
 <td align="left">MG</td>

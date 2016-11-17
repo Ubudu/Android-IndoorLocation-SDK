@@ -18,6 +18,18 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.6.4</td>
+<td align="left">2016-11-17</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>removed lag of returning initial position after map switching</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.6.3</td>
 <td align="left">2016-11-15</td>
 <td align="left">MG</td>

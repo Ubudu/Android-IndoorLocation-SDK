@@ -4,13 +4,13 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +21,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
-import com.ubudu.indoorlocation.UbuduIndoorLocationManager;
-import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
-import com.ubudu.indoorlocation.UbuduResultListener;
-import com.ubudu.indoorlocation.UbuduStartCallback;
 import com.ubudu.ilapp2.fragment.BaseFragment;
 import com.ubudu.ilapp2.fragment.MapFragment;
 import com.ubudu.ilapp2.fragment.PreferencesFragment;
@@ -33,6 +29,10 @@ import com.ubudu.ilapp2.fragment.ScanQrCodeFragment;
 import com.ubudu.ilapp2.util.FragmentUtils;
 import com.ubudu.ilapp2.util.MathUtils;
 import com.ubudu.ilapp2.util.MyPreferences;
+import com.ubudu.indoorlocation.UbuduIndoorLocationManager;
+import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
+import com.ubudu.indoorlocation.UbuduResultListener;
+import com.ubudu.indoorlocation.UbuduStartCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -240,8 +240,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
                         , new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (!input.equals(""))
+                                if (!input.equals("")) {
+                                    onMapFragmentRequested();
                                     onNamespaceChanged(String.valueOf(input));
+                                }
                             }
                         });
 
@@ -370,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
 
     @Override
     public void onNamespaceChanged(String newNamespace) {
-        String namespace = MyPreferences.getPreferenceString(getApplicationContext(),MyPreferences.PREFERENCE_KEY_NAMESPACE,"");
+        String namespace = MyPreferences.getPreferenceString(getApplicationContext(), MyPreferences.PREFERENCE_KEY_NAMESPACE,"");
         if (!namespace.equals("") && !namespace.equals(newNamespace)) {
             Log.i(TAG,"Switching Ubudu Indoor Location namespace from: \n" + namespace + " \n to:\n " + newNamespace);
             mIndoorLocationManager.stop();

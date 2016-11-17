@@ -18,15 +18,15 @@ repositories {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "com.ubudu.ilapp2"
         minSdkVersion 18
-        targetSdkVersion 24
-        versionCode 5
-        versionName "1.3"
+        targetSdkVersion 25
+        versionCode 8
+        versionName "1.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -44,9 +44,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:support-v4:25.0.0'
 
     //preferences
     compile 'com.takisoft.fix:preference-v7:24.2.1.0'
@@ -57,7 +57,8 @@ dependencies {
     compile project(':ubudumaplayout')
 
     // IL SDK
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.6.2@aar') {
+//    compile project(':ubudu-indoor-location-sdk')
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.6.4@aar') {
         transitive = true;
     }
 

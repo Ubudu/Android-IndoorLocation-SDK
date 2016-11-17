@@ -11,9 +11,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompatFix;
 import android.support.v7.preference.PreferenceGroup;
 
-import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 import com.ubudu.ilapp2.MainActivity;
 import com.ubudu.ilapp2.R;
+import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 
 public class PreferencesFragment extends PreferenceFragmentCompatFix implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -51,7 +51,7 @@ public class PreferencesFragment extends PreferenceFragmentCompatFix implements 
         }
 
         Preference ilSdkVer = findPreference("indoorlocation_sdk_version");
-        ilSdkVer.setSummary(UbuduIndoorLocationSDK.getVersion()+" ("+UbuduIndoorLocationSDK.getVersionCode()+")");
+        ilSdkVer.setSummary(UbuduIndoorLocationSDK.getVersion()+" ("+ UbuduIndoorLocationSDK.getVersionCode()+")");
     }
 
     @Override

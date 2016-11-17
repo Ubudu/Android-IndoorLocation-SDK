@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.ubudu.ilapp2.R;
+import com.ubudu.ilapp2.util.RadarAdapter;
 import com.ubudu.indoorlocation.UbuduBeacon;
 import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 import com.ubudu.indoorlocation.UbuduRangedBeaconsNotifier;
-import com.ubudu.ilapp2.R;
-import com.ubudu.ilapp2.util.RadarAdapter;
 
 import java.util.List;
 

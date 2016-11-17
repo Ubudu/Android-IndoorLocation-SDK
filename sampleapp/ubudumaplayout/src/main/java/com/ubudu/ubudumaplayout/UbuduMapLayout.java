@@ -74,6 +74,7 @@ public class UbuduMapLayout extends RelativeLayout {
     private List<Marker> indoorLocationZonesLabels;
     private Map<String,List<Marker>> customMarkersMap;
     private TileOverlayOptions mTileOverlayOptions;
+    private UbuduMapLayoutEventListener eventListener;
 
     // ---------------------------------------------------------------------------------------------
     // CONSTRUCTORS:
@@ -130,8 +131,19 @@ public class UbuduMapLayout extends RelativeLayout {
                     markPosition(lastPosition);
                     updateCamera(false,lastZoom);
                 }
+
+                if(eventListener!=null)
+                    eventListener.onMapReady();
             }
         });
+    }
+
+    /**
+     * Sets map layout event listener
+     * @param listener listener instance
+     */
+    public void setEventListener(UbuduMapLayoutEventListener listener) {
+        eventListener = listener;
     }
 
     /**
@@ -152,7 +164,7 @@ public class UbuduMapLayout extends RelativeLayout {
         try {
             if (mGoogleMap != null) {
                 if (mCurrentLocationMarker == null) {
-                    mCurrentLocationMarker = addMarkerToGoogleMap(coordinates,"Current Position",MapMarkers.getMarkerBitmap(30,"#4285F4"));
+                    mCurrentLocationMarker = addMarkerToGoogleMap(coordinates,"Current Position", MapMarkers.getMarkerBitmap(30,"#4285F4"));
                 } else if (lastPosition!=null
                         && lastPosition.latitude != coordinates.latitude
                         && lastPosition.longitude != coordinates.longitude) {
@@ -427,6 +439,9 @@ public class UbuduMapLayout extends RelativeLayout {
      */
     private void updateCamera(boolean shouldAnimate, float zoom){
 
+        if(lastPosition==null)
+            return;
+
         CameraPosition.Builder cameraPositionBuilder = new CameraPosition.Builder().target(lastPosition).bearing(lastBearing);
 
         cameraPositionBuilder.zoom(zoom);
@@ -506,5 +521,9 @@ public class UbuduMapLayout extends RelativeLayout {
                 return new LatLng(lat, lng);
             }
         });
+    }
+
+    public interface UbuduMapLayoutEventListener {
+       public  void onMapReady();
     }
 }

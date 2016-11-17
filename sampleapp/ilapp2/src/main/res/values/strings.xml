@@ -18,4 +18,8 @@
     <string name="title_app_version">App version</string>
     <string name="title_indoorlocation_sdk_version">Ubudu Indoor Location SDK version</string>
 
+    <string name="title_undetected_beacons">Show undetected beacons</string>
+    <string name="summary_undetected_beacons">Always show all beacons of the current map</string>
+    <string name="map_settings">Map settings</string>
+
 </resources>

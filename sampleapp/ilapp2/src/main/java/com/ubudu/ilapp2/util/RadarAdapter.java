@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.ubudu.indoorlocation.UbuduBeacon;
 import com.ubudu.ilapp2.R;
+import com.ubudu.indoorlocation.UbuduBeacon;
 
 import java.util.ArrayList;
 

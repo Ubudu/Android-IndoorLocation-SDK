@@ -1,6 +1,8 @@
 package com.ubudu.ilapp2.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.ubudu.ilapp2.R;
 import com.ubudu.indoorlocation.UbuduBeacon;
 import com.ubudu.indoorlocation.UbuduCompassListener;
 import com.ubudu.indoorlocation.UbuduCoordinates2D;
@@ -23,7 +26,6 @@ import com.ubudu.indoorlocation.UbuduMap;
 import com.ubudu.indoorlocation.UbuduPoint;
 import com.ubudu.indoorlocation.UbuduPositionUpdate;
 import com.ubudu.indoorlocation.UbuduZone;
-import com.ubudu.ilapp2.R;
 import com.ubudu.ubudumaplayout.UbuduMapLayout;
 
 import java.util.ArrayList;
@@ -37,13 +39,17 @@ import butterknife.ButterKnife;
  * Created by mgasztold on 05/10/16.
  */
 
-public class MapFragment extends BaseFragment implements UbuduIndoorLocationDelegate {
+public class MapFragment extends BaseFragment implements UbuduIndoorLocationDelegate, UbuduMapLayout.UbuduMapLayoutEventListener {
 
     public static final String TAG = MapFragment.class.getCanonicalName();
 
     private static final String TAG_BEACON_MARKER = "beacon_marker";
+    private static final String TAG_UNDETECTED_BEACON_MARKER = "undetected_beacon_marker";
 
     private DrawerLayout mRootView;
+
+    private boolean showUndetectedBeacons = false;
+    private static String lastLoadingLabelMessage = "";
 
     @BindView(R.id.map)
     UbuduMapLayout mMapView;
@@ -63,6 +69,13 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
         super.onViewCreated(view, savedInstanceState);
 
         mMapView.init(getContext());
+        mMapView.setEventListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        lastLoadingLabelMessage = null;
+        super.onDestroy();
     }
 
     @Override
@@ -85,6 +98,9 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
                 zonesChanged(mIndoorLocationManager.map().getZonesForPosition(mIndoorLocationManager.getLastKnownPosition().getCartesianCoordinates()));
             setTilesOverlay(mIndoorLocationManager.map().uuid());
         }
+
+        if(!lastLoadingLabelMessage.equals(""))
+            showLoadingLabelWithText(lastLoadingLabelMessage);
     }
 
     @Override
@@ -165,6 +181,24 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
         Log.i(TAG,"mapChanged");
         mMapView.reset();
         setTilesOverlay(uuid);
+        if(showUndetectedBeacons){
+            showUndetectedBeacons();
+        }
+    }
+
+    private void showUndetectedBeacons() {
+        mMapView.clearCustomMarkersWithTag(TAG_UNDETECTED_BEACON_MARKER);
+        UbuduMap ubuduMap = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().map();
+        if(ubuduMap==null)
+            return;
+        List<UbuduBeacon> mapBeacons = ubuduMap.beacons();
+        for(UbuduBeacon beacon : mapBeacons){
+            mMapView.addCustomMarker(TAG_UNDETECTED_BEACON_MARKER
+                    ,new LatLng(beacon.geographicalPosition().latitude(), beacon.geographicalPosition().longitude())
+                    ,beacon.major()+"/"+beacon.minor()
+                    ,40
+                    ,"#50a5c4e1");
+        }
     }
 
     private void setTilesOverlay(String uuid) {
@@ -183,6 +217,7 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
     }
 
     public void showLoadingLabelWithText(String text) {
+        lastLoadingLabelMessage = text;
         ImageView imageView = (ImageView) loadingLabelLayout.findViewById(R.id.img_loading);
         if(imageView.getAnimation()==null || !imageView.getAnimation().isInitialized()) {
             Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.progress);
@@ -194,6 +229,7 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
     }
 
     private void onProgressDialogHideRequested() {
+        lastLoadingLabelMessage = "";
         loadingLabelLayout.setVisibility(View.GONE);
     }
 
@@ -201,5 +237,20 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
         Log.i(TAG,"map fragment reset");
         if(mMapView!=null)
             mMapView.reset();
+    }
+
+    @Override
+    public void onMapReady() {
+        SharedPreferences mSharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(mSharedPref.getBoolean("undetected_beacons", false)) {
+            if(!showUndetectedBeacons)
+                showUndetectedBeacons();
+            showUndetectedBeacons = true;
+        } else {
+            if(showUndetectedBeacons)
+                if(mMapView!=null)
+                    mMapView.clearCustomMarkersWithTag(TAG_UNDETECTED_BEACON_MARKER);
+            showUndetectedBeacons = false;
+        }
     }
 }

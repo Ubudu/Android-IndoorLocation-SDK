@@ -11,11 +11,11 @@ public class Mercator {
     private static double RADIUS = OFFSET/ Math.PI;
 
     public static double xToLng(int x, int zoom) {
-        return ((double)((x<<(21 - zoom)) - Mercator.OFFSET)/Mercator.RADIUS)*180.0/Math.PI;
+        return ((double)((x<<(21 - zoom)) - Mercator.OFFSET)/ Mercator.RADIUS)*180.0/Math.PI;
     }
 
     public static double yToLat(int y, int zoom) {
-        return (Math.PI/2-2*Math.atan(Math.exp((double)((y<<(21 - zoom))-Mercator.OFFSET)/Mercator.RADIUS)))*180.0/Math.PI;
+        return (Math.PI/2-2*Math.atan(Math.exp((double)((y<<(21 - zoom))- Mercator.OFFSET)/ Mercator.RADIUS)))*180.0/Math.PI;
     }
 
     /**

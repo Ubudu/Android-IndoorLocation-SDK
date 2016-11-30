@@ -30,7 +30,8 @@ Once the application is ready its namespace uid has to be set in the SDK so it c
 
 ## Installing
 
-To use the library in an Android Studio project please do the following:
+
+### Android Studio
 
 1) add the Ubudu nexus repository url to your build.gradle file:
 
@@ -52,7 +53,49 @@ To use the library in an Android Studio project please do the following:
     }
 ```
 
-A jar file of the SDK is also available in the `/Ubudu-IndoorLocation-SDK` directory of this repository. To use it in your project (e.g. in Eclipse IDE) drop the jar file into the `libs` folder and configure the Java build path to include the library.
+### Eclipse
+
+1) All jar files of the Indoor Location SDK are available under the `/Ubudu-IndoorLocation-SDK` directory of this repository. To use it in your Eclipse project drop the jar files into the `libs` directory and configure the Java build path to point to it.
+
+2) Add the following permissions to your app's manifest:
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.BLUETOOTH"/>
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+	
+3) add the following block to your app's manifest:
+
+	<service
+	    android:name="com.ubudu.beacon.service.UbuduBeaconService"
+	    android:enabled="true"
+	    android:exported="false"
+	    android:isolatedProcess="false" />
+	
+	<service
+	    android:name="com.ubudu.beacon.IBeaconIntentProcessor"
+	    android:enabled="true"
+	    android:exported="false"
+	    android:isolatedProcess="false">
+	    <meta-data android:name="background" android:value="true" />
+	    <intent-filter android:priority="1">
+	        <action android:name="com.ubudu.beacon.internal.action.IBeaconIntentProcessor"/>
+	    </intent-filter>
+	</service>
+	
+	<receiver android:name="com.ubudu.indoorlocation.implementation.service.UbuduBootReceiver">
+	    <intent-filter>
+	        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+	    </intent-filter>
+	</receiver>
+	
+	<service
+	    android:name="com.ubudu.indoorlocation.implementation.service.UbuduIndoorLocationService"
+	    android:enabled="true"
+	    android:exported="true" >
+	</service>
 
 ## Android application integration
 

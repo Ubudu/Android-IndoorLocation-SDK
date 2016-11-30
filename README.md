@@ -1,9 +1,9 @@
-# Android-IndoorLocation-SDK - version 2.6.4
+# Android-IndoorLocation-SDK - v2.6.4
 
-All info regarding adding the `Ubudu Indoor Location SDK` to a host application along with necessary project configuration can be found in the [Wiki][https://github.com/Ubudu/Android-IndoorLocation-SDK/wiki].
+**All info regarding adding the `Ubudu Indoor Location SDK` to a host application along with necessary project configuration can be found in the [Wiki](https://github.com/Ubudu/Android-IndoorLocation-SDK/wiki).**
 
 ## Api reference
-[https://github.com/Ubudu/Android-IndoorLocation-SDK/tree/master/JavaDoc](https://github.com/Ubudu/Android-IndoorLocation-SDK/tree/master/JavaDoc)
+JavaDoc: [https://github.com/Ubudu/Android-IndoorLocation-SDK/tree/master/JavaDoc](https://github.com/Ubudu/Android-IndoorLocation-SDK/tree/master/JavaDoc)
 
 ## Docs
 

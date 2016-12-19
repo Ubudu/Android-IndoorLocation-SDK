@@ -24,7 +24,7 @@
 <td align="left">
 <li>Features added:</li>
 <ul><li>movementChanged delegate callback. Called when user starts/stops moving with the phone</li></ul>
-<p>Issues adressed:</p>
+<p>Issues addressed:</p>
 <ul>
 <li>scanning lags happening on Android N</li>
 </ul>

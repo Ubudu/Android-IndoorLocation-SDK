@@ -18,6 +18,21 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.7.0</td>
+<td align="left">2016-12-19</td>
+<td align="left">MG</td>
+<td align="left">
+<li>Features added:</li>
+<ul><li>movementChanged delegate callback. Called when user starts/stops moving with the phone</li></ul>
+<p>Issues adressed:</p>
+<ul>
+<li>scanning lags happening on Android N</li>
+</ul>
+</td>
+</tr>
+
+
+<tr class="odd">
 <td align="left">2.6.4</td>
 <td align="left">2016-11-17</td>
 <td align="left">MG</td>

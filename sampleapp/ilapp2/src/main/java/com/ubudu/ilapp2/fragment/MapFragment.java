@@ -94,8 +94,8 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
             }
         });
         if(mIndoorLocationManager.map()!=null) {
-            if(mIndoorLocationManager.getLastKnownPosition()!=null)
-                zonesChanged(mIndoorLocationManager.map().getZonesForPosition(mIndoorLocationManager.getLastKnownPosition().getCartesianCoordinates()));
+            if(mIndoorLocationManager.getLastPositionUpdate()!=null)
+                zonesChanged(mIndoorLocationManager.map().getZonesForPosition(mIndoorLocationManager.getLastPositionUpdate().getClosestNavigablePoint().getCartesianCoordinates()));
             setTilesOverlay(mIndoorLocationManager.map().uuid());
         }
 
@@ -116,7 +116,7 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
                     , ubuduPositionUpdate.getClosestNavigablePoint().getGeographicalCoordinates().longitude());
             mMapView.updateCamera(true);
         }
-        if(!ubuduPositionUpdate.getUpdateOrigin().equals(UbuduPositionUpdate.UPDATE_ORIGIN_MOTION))
+        if(ubuduPositionUpdate.getUpdateOrigin()!=(UbuduPositionUpdate.UPDATE_ORIGIN_MOTION))
             onProgressDialogHideRequested();
     }
 
@@ -184,6 +184,11 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
         if(showUndetectedBeacons){
             showUndetectedBeacons();
         }
+    }
+
+    @Override
+    public void movementChanged(boolean b) {
+
     }
 
     private void showUndetectedBeacons() {

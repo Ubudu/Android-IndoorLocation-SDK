@@ -58,7 +58,7 @@ dependencies {
 
     // IL SDK
 //    compile project(':ubudu-indoor-location-sdk')
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.6.4@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.8.0@aar') {
         transitive = true;
     }
 

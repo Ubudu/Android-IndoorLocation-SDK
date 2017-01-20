@@ -18,6 +18,27 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.8.0</td>
+<td align="left">2017-01-19</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>position history logging for Back Office analytics</li>
+<li>API to lock operation only on a single map uuid</li>
+</ul>
+<p>Improvements</p>
+<ul>
+<li>map anchors coordinates are now returned in degrees</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>`src == null` crash occuring on some devices</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.7.0</td>
 <td align="left">2016-12-19</td>
 <td align="left">MG</td>

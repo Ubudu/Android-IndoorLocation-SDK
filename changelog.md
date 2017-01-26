@@ -18,6 +18,22 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.8.1</td>
+<td align="left">2017-01-26</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>beacons battery level API</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>crash fixes</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.8.0</td>
 <td align="left">2017-01-19</td>
 <td align="left">MG</td>

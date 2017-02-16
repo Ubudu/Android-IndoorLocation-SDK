@@ -18,6 +18,30 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.8.2</td>
+<td align="left">2017-02-16</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>API to toggle position history logs posting</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>SDK now starts returning GPS positions of any accuracy just after launch before it catches up any beacon signals</li>
+<li>all buffered position history logs are always flushed out for posting when app gets killed</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>GPS used on maps with switchable to outdoor setting set to false</li>
+<li>position logs not always being posted</li>
+<li>crash when device does not support GPS</li>
+<li>LogsService related crash</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.8.1</td>
 <td align="left">2017-01-26</td>
 <td align="left">MG</td>

@@ -2,9 +2,10 @@
 
 **All info regarding adding the `Ubudu Indoor Location SDK` to a host application along with necessary project configuration can be found in the [Wiki](https://github.com/Ubudu/Android-IndoorLocation-SDK/wiki).**
 
-## Library module helpful for ultra fast integration with Google Maps
-
+### Library module helpful for ultra fast integration with Google Maps:
 https://github.com/Ubudu/GoogleMapsLayout-Android
+
+<p align="center"><img src="docs_images/screen.png" width="300px"></p>
 
 ## Api reference
 JavaDoc: [https://github.com/Ubudu/Android-IndoorLocation-SDK/tree/master/JavaDoc](https://github.com/Ubudu/Android-IndoorLocation-SDK/tree/master/JavaDoc)

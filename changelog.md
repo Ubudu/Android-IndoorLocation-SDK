@@ -24,17 +24,22 @@
 <td align="left">
 <p>Features added:</p>
 <ul>
-<li>API to toggle position history logs posting</li>
+<li>ScanningStrategy class for controlling Bluetooth scanning periods</li>
 </ul>
 <p>Improvements:</p>
 <ul>
-<li>improved API of UbuduBeacon</li>
+<li>minimised new object instances creation to reduce the amount of GC being called by the system</li>
+<li>improved API of ILBeacon (previously UbuduBeacon)</li>
+<li>cleaned API of UbuduMap</li>
 <li>improved API for controlling the bluetooth scanning intervals</li>
+<li>compare ILBeacon object by Bluetooth mac address</li>
+<li>removed sorting the ranged beacons list by distance to increase ease and stability of displaying them</li>
+<li>do not register to GPS for 45 seconds if map is not switchable to outdoor</li>
 </ul>
 <p>Issues addressed:</p>
 <ul>
-<li>Null pointer exception crash on startup happening on some devices</li>
-<li>Updating scanning periods not working</li>
+<li>fixed too many bluetooth scans being launched on Android N</li>
+<li>do not allow switching to GPS for 45 seconds since last ble based position update if the map is set as not switchable to outdoor</li>
 </ul>
 </td>
 </tr>

@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.ubudu.beacon.ScanningStrategy;
 import com.ubudu.ilapp2.fragment.BaseFragment;
 import com.ubudu.ilapp2.fragment.MapFragment;
 import com.ubudu.ilapp2.fragment.PreferencesFragment;
@@ -149,8 +150,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
     private void initUbuduIndoorLocationSdk() {
         mIndoorLocationSdk = UbuduIndoorLocationSDK.getSharedInstance(getApplicationContext());
         mIndoorLocationManager = mIndoorLocationSdk.getIndoorLocationManager();
-        mIndoorLocationManager.setRangingScanPeriods(850, 3000);
-        mIndoorLocationManager.setRangingBetweenScanPeriods(300,5000);
+        mIndoorLocationManager.setBeaconScanningStrategy(new ScanningStrategy()
+                .setForegroundRangingScanPeriod(850)
+                .setBackgroundRangingScanPeriod(2000L)
+                .setForegroundRangingBetweenScanPeriod(300)
+                .setBackgroundRangingBetweenScanPeriod(7000));
 
         String namespace = MyPreferences.getPreferenceString(getApplicationContext(), MyPreferences.PREFERENCE_KEY_NAMESPACE, "");
         if(!namespace.equals("")) {
@@ -178,18 +182,18 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
 
             mIndoorLocationManager.start(new UbuduStartCallback() {
                 @Override
-                public void success() {
+                public void onSuccess() {
                     Log.i(TAG, "Ubudu Indoor Location SDK started successfully");
                     mMapFragment.showLoadingLabelWithText("Waiting for initial position...");
                 }
 
                 @Override
-                public void failure() {
+                public void onFailure() {
                     Log.e(TAG, "Ubudu Indoor Location SDK could not be started.");
                 }
 
                 @Override
-                public void restartedAfterContentAutoUpdated() {
+                public void onRestartedAfterContentAutoUpdated() {
                     Log.i(TAG, "Ubudu Indoor Location SDK maps data files have been updated.");
                 }
             });

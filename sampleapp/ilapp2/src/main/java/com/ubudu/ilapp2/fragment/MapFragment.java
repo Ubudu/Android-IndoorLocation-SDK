@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.ubudu.ilapp2.R;
-import com.ubudu.indoorlocation.UbuduBeacon;
+import com.ubudu.indoorlocation.ILBeacon;
 import com.ubudu.indoorlocation.UbuduCompassListener;
 import com.ubudu.indoorlocation.UbuduCoordinates2D;
 import com.ubudu.indoorlocation.UbuduIndoorLocationDelegate;
@@ -88,15 +88,15 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
 
         mIndoorLocationManager.setCompassListener(new UbuduCompassListener() {
             @Override
-            public void azimuthUpdated(float azimuth) {
+            public void onAzimuthUpdated(float azimuth) {
                 if(mMapView!=null)
                     mMapView.updateBearing(azimuth);
             }
         });
-        if(mIndoorLocationManager.map()!=null) {
+        if(mIndoorLocationManager.getMap()!=null) {
             if(mIndoorLocationManager.getLastPositionUpdate()!=null)
-                zonesChanged(mIndoorLocationManager.map().getZonesForPosition(mIndoorLocationManager.getLastPositionUpdate().getClosestNavigablePoint().getCartesianCoordinates()));
-            setTilesOverlay(mIndoorLocationManager.map().uuid());
+                zonesChanged(mIndoorLocationManager.getMap().getZonesForPosition(mIndoorLocationManager.getLastPositionUpdate().getClosestNavigablePoint().getCartesianCoordinates()));
+            setTilesOverlay(mIndoorLocationManager.getMap().getUuid());
         }
 
         if(!lastLoadingLabelMessage.equals(""))
@@ -112,8 +112,8 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
     @Override
     public void positionChanged(UbuduPositionUpdate ubuduPositionUpdate) {
         if(mMapView!=null) {
-            mMapView.markPosition(ubuduPositionUpdate.getClosestNavigablePoint().getGeographicalCoordinates().latitude()
-                    , ubuduPositionUpdate.getClosestNavigablePoint().getGeographicalCoordinates().longitude());
+            mMapView.markPosition(ubuduPositionUpdate.getClosestNavigablePoint().getGeographicalCoordinates().getLatitude()
+                    , ubuduPositionUpdate.getClosestNavigablePoint().getGeographicalCoordinates().getLongitude());
             mMapView.updateCamera(true);
         }
         if(ubuduPositionUpdate.getUpdateOrigin()!=(UbuduPositionUpdate.UPDATE_ORIGIN_MOTION))
@@ -138,14 +138,14 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
             while (iter.hasNext()) {
                 UbuduZone zone = iter.next();
                 List<LatLng> coords = new ArrayList<>();
-                Iterator<UbuduPoint> iter1 = zone.coordinates().iterator();
+                Iterator<UbuduPoint> iter1 = zone.getCoordinates().iterator();
                 while (iter1.hasNext()) {
                     UbuduPoint p = iter1.next();
-                    UbuduCoordinates2D c = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().map().geoCoordinates(p);
+                    UbuduCoordinates2D c = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().getMap().getGeoCoordinates(p);
                     if(c!=null)
-                        coords.add(new LatLng(c.latitude(), c.longitude()));
+                        coords.add(new LatLng(c.getLatitude(), c.getLongitude()));
                 }
-                mMapView.highlightZone(coords, zone.name(), zone.color());
+                mMapView.highlightZone(coords, zone.getName(), zone.getColor());
             }
         }
     }
@@ -156,11 +156,11 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
     }
 
     @Override
-    public void beaconsUpdated(List<UbuduBeacon> beacons) {
+    public void beaconsUpdated(List<ILBeacon> beacons) {
         mMapView.clearCustomMarkersWithTag(TAG_BEACON_MARKER);
         boolean noBeaconValidForPositioning = true;
-        for(UbuduBeacon beacon : beacons) {
-            LatLng coordinates = new LatLng(beacon.geographicalPosition().latitude(), beacon.geographicalPosition().longitude());
+        for(ILBeacon beacon : beacons) {
+            LatLng coordinates = new LatLng(beacon.getGeographicalPosition().getLatitude(), beacon.getGeographicalPosition().getLongitude());
 
             String color = "#FFF48642";
             if (beacon.isValidatedForPositionCalculation()) {
@@ -168,7 +168,7 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
                 noBeaconValidForPositioning = false;
             }
 
-            mMapView.addCustomMarker(TAG_BEACON_MARKER,coordinates,beacon.major()+"/"+beacon.minor(),40,color);
+            mMapView.addCustomMarker(TAG_BEACON_MARKER,coordinates,beacon.getMajor()+"/"+beacon.getMinor(),40,color);
         }
         if(beacons.size()==0 || noBeaconValidForPositioning)
             showLoadingLabelWithText("No beacons in range...");
@@ -193,14 +193,14 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
 
     private void showUndetectedBeacons() {
         mMapView.clearCustomMarkersWithTag(TAG_UNDETECTED_BEACON_MARKER);
-        UbuduMap ubuduMap = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().map();
+        UbuduMap ubuduMap = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().getMap();
         if(ubuduMap==null)
             return;
-        List<UbuduBeacon> mapBeacons = ubuduMap.beacons();
-        for(UbuduBeacon beacon : mapBeacons){
+        List<ILBeacon> mapBeacons = ubuduMap.getBeacons();
+        for(ILBeacon beacon : mapBeacons){
             mMapView.addCustomMarker(TAG_UNDETECTED_BEACON_MARKER
-                    ,new LatLng(beacon.geographicalPosition().latitude(), beacon.geographicalPosition().longitude())
-                    ,beacon.major()+"/"+beacon.minor()
+                    ,new LatLng(beacon.getGeographicalPosition().getLatitude(), beacon.getGeographicalPosition().getLongitude())
+                    ,beacon.getMajor()+"/"+beacon.getMinor()
                     ,40
                     ,"#50a5c4e1");
         }
@@ -208,13 +208,13 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
 
     private void setTilesOverlay(String uuid) {
         try {
-            UbuduMap ubuduMap = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().map();
+            UbuduMap ubuduMap = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().getMap();
             if(ubuduMap!=null) {
-                UbuduCoordinates2D bottomRightAnchorCoordinates = ubuduMap.bottomRightAnchorCoordinates().toDeg();
-                UbuduCoordinates2D topLeftAnchorCoordinates = ubuduMap.topLeftAnchorCoordinates().toDeg();
+                UbuduCoordinates2D bottomRightAnchorCoordinates = ubuduMap.getBottomRightAnchorCoordinates().toDeg();
+                UbuduCoordinates2D topLeftAnchorCoordinates = ubuduMap.getTopLeftAnchorCoordinates().toDeg();
                 mMapView.addTileOverlay(ubuduMap.getTilesBaseUrl()
-                        , new LatLng(bottomRightAnchorCoordinates.latitude(), topLeftAnchorCoordinates.longitude())
-                        , new LatLng(topLeftAnchorCoordinates.latitude(), bottomRightAnchorCoordinates.longitude()));
+                        , new LatLng(bottomRightAnchorCoordinates.getLatitude(), topLeftAnchorCoordinates.getLongitude())
+                        , new LatLng(topLeftAnchorCoordinates.getLatitude(), bottomRightAnchorCoordinates.getLongitude()));
             }
         } catch (Exception e) {
             e.printStackTrace();

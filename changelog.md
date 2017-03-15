@@ -18,6 +18,28 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.9.0</td>
+<td align="left">2017-03-15</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>API to toggle position history logs posting</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>improved API of UbuduBeacon</li>
+<li>improved API for controlling the bluetooth scanning intervals</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>Null pointer exception crash on startup happening on some devices</li>
+<li>Updating scanning periods not working</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.8.2</td>
 <td align="left">2017-02-16</td>
 <td align="left">MG</td>

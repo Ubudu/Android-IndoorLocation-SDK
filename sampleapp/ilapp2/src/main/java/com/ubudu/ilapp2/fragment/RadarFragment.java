@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import com.ubudu.ilapp2.R;
 import com.ubudu.ilapp2.util.RadarAdapter;
-import com.ubudu.indoorlocation.UbuduBeacon;
+import com.ubudu.indoorlocation.ILBeacon;
 import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 import com.ubudu.indoorlocation.UbuduRangedBeaconsNotifier;
 
@@ -63,13 +63,13 @@ public class RadarFragment extends BaseFragment implements UbuduRangedBeaconsNot
     }
 
     @Override
-    public void didRangeBeacons(final List<UbuduBeacon> beacons) {
+    public void didRangeBeacons(final List<ILBeacon> beacons) {
         if (getActivity() != null)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     adapter.clear();
-                    for (UbuduBeacon beacon : beacons) {
+                    for (ILBeacon beacon : beacons) {
                         adapter.add(beacon);
                     }
                     adapter.notifyDataSetChanged();

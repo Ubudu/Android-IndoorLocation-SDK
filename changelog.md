@@ -18,6 +18,26 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.9.1</td>
+<td align="left">2017-04-13</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>API to control rssi and distance thresholds for ILBeacon to be valid for position calculation</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>additional logic for protection against false outdoor->indoor switches</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>crashes</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.9.0</td>
 <td align="left">2017-03-15</td>
 <td align="left">MG</td>

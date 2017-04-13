@@ -23,6 +23,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="551ba6a2fe2a419c46b411612399179d86820e30" />
+        <!-- Use here your Google Map API v2 key -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyC30GXjc8Mep_tPYglfzA0UXBM5UYdUmmU" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

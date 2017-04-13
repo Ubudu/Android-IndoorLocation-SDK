@@ -48,7 +48,7 @@ public class BaseFragment extends Fragment {
         void onScanQrCodeFragmentRequested();
         void onSettingsFragmentRequested();
 
-        void mapFragmentResumed();
+        void mapFragmentResumed(MapFragment mapFragment);
         void radarFragmentResumed();
         void scanQrCodeFragmentResumed();
         void scanQrCodeFragmentPaused();
@@ -58,6 +58,8 @@ public class BaseFragment extends Fragment {
         void onNamespaceChanged(String namespace);
 
         void onNoQrCodeScannedOrAccepted();
+
+        void mapFragmentPaused();
     }
 
     public interface DialogResponseListener {

@@ -1,1 +1,1 @@
-include ':ilapp2', 'ubudumaplayout'
+include ':ilapp2', 'maplayout'

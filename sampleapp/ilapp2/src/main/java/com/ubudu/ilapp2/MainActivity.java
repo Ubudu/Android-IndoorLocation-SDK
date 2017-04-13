@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
 
         String namespace = MyPreferences.getPreferenceString(getApplicationContext(), MyPreferences.PREFERENCE_KEY_NAMESPACE, "");
         if(!namespace.equals("")) {
-            if(currentFragmentTag.equals(MapFragment.TAG)){
+            if(currentFragmentTag.equals(MapFragment.TAG) && mMapFragment!=null){
                 mMapFragment.showLoadingLabelWithText("Loading namespace...");
             }
             mIndoorLocationSdk.setNamespace(namespace, new UbuduResultListener() {
@@ -311,7 +311,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
 
 
     @Override
-    public void mapFragmentResumed() {
+    public void mapFragmentResumed(MapFragment mapFragment) {
+        mMapFragment = mapFragment;
         currentFragmentTag = MapFragment.TAG;
         mBottomBar.selectTabWithId(R.id.map_item);
 
@@ -390,6 +391,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
     public void onNoQrCodeScannedOrAccepted() {
         if(MyApplication.getActivityForeground())
             noNamespaceInput();
+    }
+
+    @Override
+    public void mapFragmentPaused() {
+        mMapFragment = null;
     }
 
     private void noNamespaceInput() {

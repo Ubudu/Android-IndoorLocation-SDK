@@ -54,13 +54,16 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     // map layout
-    compile project(':ubudumaplayout')
+    compile project(':maplayout')
 
     // IL SDK
 //    compile project(':ubudu-indoor-location-sdk')
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.9.0@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.9.1@aar') {
         transitive = true;
     }
+
+    // buttons
+    compile 'com.github.medyo:fancybuttons:1.8.3'
 
     compile 'com.afollestad.material-dialogs:core:0.9.0.2'
 

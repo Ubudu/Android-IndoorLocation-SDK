@@ -18,6 +18,22 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.9.2</td>
+<td align="left">2017-05-03</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>getting initial geographical position</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>bluetooth scanning start/stop</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.9.1</td>
 <td align="left">2017-04-13</td>
 <td align="left">MG</td>

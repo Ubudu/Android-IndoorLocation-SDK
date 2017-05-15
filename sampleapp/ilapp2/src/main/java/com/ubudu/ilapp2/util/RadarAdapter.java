@@ -69,7 +69,7 @@ public class RadarAdapter extends ArrayAdapter<ILBeacon> {
         ILBeacon b = getItem(position);
 
         TextView name = (TextView) view.findViewById(R.id.beacon_name);
-        name.setText(b.getBluetoothName());
+        name.setText(b.getBluetoothDevice().getName());
 
         TextView rssi = (TextView) view.findViewById(R.id.beacon_rssi_value);
         if(b.getRssi()<-85d){

@@ -57,8 +57,7 @@ dependencies {
     compile project(':maplayout')
 
     // IL SDK
-//    compile project(':ubudu-indoor-location-sdk')
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.10.0@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.11.2@aar') {
         transitive = true;
     }
 

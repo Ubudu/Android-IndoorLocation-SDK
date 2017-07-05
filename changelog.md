@@ -18,6 +18,23 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.11.2</td>
+<td align="left">2017-07-05</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>added speed estimation</li>
+<li>improved motion sensors logic to improve position stability when not moving and reduce position changing lag when actually moving</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed reseting of position when error arises too much during motion</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.10.0</td>
 <td align="left">2017-05-15</td>
 <td align="left">MG</td>

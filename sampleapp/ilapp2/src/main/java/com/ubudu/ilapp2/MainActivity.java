@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
                 }
 
                 @Override
-                public void error() {
-                    Log.e(TAG,"Namespace could not be set.");
+                public void error(String message) {
+                    Log.e(TAG,message);
                 }
             });
 

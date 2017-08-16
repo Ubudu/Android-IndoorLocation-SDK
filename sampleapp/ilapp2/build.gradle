@@ -54,10 +54,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     // map layout
-    compile project(':maplayout')
+    compile('com.ubudu.gmaps:maplayout:1.2.1-SNAPSHOT@aar') {
+        transitive = true;
+    }
 
     // IL SDK
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.11.2@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.11.3@aar') {
         transitive = true;
     }
 

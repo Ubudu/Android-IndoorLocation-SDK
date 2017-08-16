@@ -1,1 +1,1 @@
-include ':ilapp2', 'maplayout'
+include ':ilapp2'

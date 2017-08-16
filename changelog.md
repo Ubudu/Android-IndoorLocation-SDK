@@ -18,6 +18,26 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.11.3</td>
+<td align="left">2017-08-16</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>real-time position logging api, see <a href="https://github.com/Ubudu/Android-IndoorLocation-SDK/wiki/Real-time-position-logging">wiki article</a></li>
+<li>add api to switch between stable/ble_corrective modes of operation. This allows to have more stable position output if needed on the cost of latency or more fluent updates on the cost of accuracy. This modes can be switched real time without the need restarting the whole SDK. Stable mode is the deafult one.</li>
+<li>add API to control particle filtering spread. This can help fine tuning the positioning accuracy and latency to particular hardware on site installation</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed remaining position logs not being persisted for posting after app got killed</li>
+<li>fixed Bluetooth scanning related crash</li>
+<li>fixed bug of processing beacons from other regions than indoor location dedicated region. This was happening when app used Indoor Location SDK together with Contextual Interaction SDK</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.11.2</td>
 <td align="left">2017-07-05</td>
 <td align="left">MG</td>

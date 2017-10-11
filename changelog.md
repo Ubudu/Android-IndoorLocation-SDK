@@ -18,6 +18,18 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.11.4</td>
+<td align="left">2017-10-11</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Issues addressed:</p>
+<ul>
+<li>Plugged new BLE scanner module with fixes for Android N</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.11.3</td>
 <td align="left">2017-08-16</td>
 <td align="left">MG</td>

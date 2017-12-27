@@ -25,7 +25,7 @@ android {
         applicationId "com.ubudu.ilapp2"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 8
+        versionCode 9
         versionName "1.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -59,7 +59,7 @@ dependencies {
     }
 
     // IL SDK
-    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.11.4@aar') {
+    compile('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:2.11.5@aar') {
         transitive = true;
     }
 

@@ -18,6 +18,22 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.11.5</td>
+<td align="left">2017-12-27</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>Attractor mode of operation</li>
+</ul>
+<p>Improvements:</p>
+<ul>
+<li>log list of indoor zones valid for position in the analytic logs</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.11.4</td>
 <td align="left">2017-10-11</td>
 <td align="left">MG</td>

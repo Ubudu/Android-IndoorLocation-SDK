@@ -18,6 +18,19 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">2.12.0</td>
+<td align="left">2018-02-19</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>Removed android.permission.BOOT_COMPLETED permission from the manifest. This permission is optional and should be added on the application level if developer wants to have 100% guarantee that analytic logs will be posted to the cloud without user restarting the app after phone gets rebooted. </li>
+<li>Removed deprecated API of setting automatic server restart.</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.11.5</td>
 <td align="left">2017-12-27</td>
 <td align="left">MG</td>

@@ -13,6 +13,7 @@ import android.support.v7.preference.PreferenceGroup;
 
 import com.ubudu.ilapp2.MainActivity;
 import com.ubudu.ilapp2.R;
+import com.ubudu.ilapp2.util.MyPreferences;
 import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 
 public class PreferencesFragment extends PreferenceFragmentCompatFix implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,6 +40,17 @@ public class PreferencesFragment extends PreferenceFragmentCompatFix implements 
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
                 return true;
+            }
+        });
+
+        Preference myShowUndetectedBeacons = findPreference("undetected_beacons");
+        myShowUndetectedBeacons.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                MyPreferences.setPreferenceBoolean(getContext(), "show_undetected_beacons", (Boolean) newValue);
+
+                return preference.isSelectable();
             }
         });
 

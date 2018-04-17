@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.View
         });
     }
 
-    private void initUbuduIndoorLocationSdk() {
+    public void initUbuduIndoorLocationSdk() {
         mIndoorLocationSdk = UbuduIndoorLocationSDK.getSharedInstance(getApplicationContext());
         mIndoorLocationManager = mIndoorLocationSdk.getIndoorLocationManager();
         mIndoorLocationManager.setBeaconScanningStrategy(new ScanningStrategy()

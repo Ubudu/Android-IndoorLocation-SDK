@@ -40,6 +40,9 @@
         <android.support.v7.preference.Preference
             android:key="indoorlocation_sdk_version"
             android:title="@string/title_indoorlocation_sdk_version" />
+        <android.support.v7.preference.Preference
+            android:key="update_settings"
+            android:title="@string/sync_ubudu_manager" />
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

@@ -71,7 +71,6 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
     private final long TIME_OFFSET = 20L;
 
     private boolean showParticles = false;
-    private boolean showBeacons = false;
     private boolean showUndetectedBeacons = false;
     private static String lastLoadingLabelMessage = "";
     private boolean isMoving = false;
@@ -235,7 +234,6 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
         if (isCameraMoving) {
             return;
         }
-        if (!showBeacons) return;
 
         // changing markers of beacons not present in the new list of beacons
         Map<Marker, com.google.android.gms.maps.model.Marker> markersMatchingTag = mMapView.findMarkers(new MarkerSearchPattern().tag(TAG_BEACON_MARKER));
@@ -509,12 +507,7 @@ public class MapFragment extends BaseFragment implements UbuduIndoorLocationDele
             showParticles = false;
         }
 
-        if (mSharedPref.getBoolean("show_beacons", false)) {
-            showBeacons = true;
-        } else {
-            hideAllDetectedBeaconMarkers();
-            showBeacons = false;
-        }
+
 
         UbuduMap map = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().getMap();
         UbuduPositionUpdate lastUpdate = UbuduIndoorLocationSDK.getSharedInstance(getContext()).getIndoorLocationManager().getLastPositionUpdate();

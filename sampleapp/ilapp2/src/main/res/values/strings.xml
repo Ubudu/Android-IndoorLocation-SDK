@@ -21,5 +21,7 @@
     <string name="title_undetected_beacons">Show undetected beacons</string>
     <string name="summary_undetected_beacons">Always show all beacons of the current map</string>
     <string name="map_settings">Map settings</string>
+    <string name="sync_ubudu_manager">Synchronize with Ubudu Manager</string>
+
 
 </resources>

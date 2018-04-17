@@ -10,9 +10,11 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompatFix;
 import android.support.v7.preference.PreferenceGroup;
+import android.widget.Toast;
 
 import com.ubudu.ilapp2.MainActivity;
 import com.ubudu.ilapp2.R;
+import com.ubudu.ilapp2.util.FragmentUtils;
 import com.ubudu.ilapp2.util.MyPreferences;
 import com.ubudu.indoorlocation.UbuduIndoorLocationSDK;
 
@@ -64,6 +66,17 @@ public class PreferencesFragment extends PreferenceFragmentCompatFix implements 
 
         Preference ilSdkVer = findPreference("indoorlocation_sdk_version");
         ilSdkVer.setSummary(UbuduIndoorLocationSDK.getVersion()+" ("+ UbuduIndoorLocationSDK.getVersionCode()+")");
+
+        Preference updateSettingsBtn = findPreference("update_settings");
+        updateSettingsBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+
+                ((MainActivity) getActivity()).initUbuduIndoorLocationSdk();
+                Toast.makeText(getContext(), "Data downloaded successfully ", Toast.LENGTH_SHORT).show();
+                FragmentUtils.changeFragment(getActivity() ,new MapFragment(),true);
+                return true;
+            }
+        });
     }
 
     @Override

@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/user_calibration_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/speed_coefficient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/speed_coefficient" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/speed_coefficient_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dsb_indicatorColor="@color/colorAccent"
+        app:dsb_max="100"
+        app:dsb_min="0"
+        app:dsb_progressColor="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/static_coefficient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/static_coefficient" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/static_coefficient_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dsb_indicatorColor="@color/colorAccent"
+        app:dsb_max="100"
+        app:dsb_min="0"
+        app:dsb_progressColor="@color/colorAccent" />
+
+</LinearLayout>

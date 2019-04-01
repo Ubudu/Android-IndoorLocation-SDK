@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Authenticator</string>
+
+    <string name="login_label">Log in</string>
+    <string name="title_activity_account_authenticator">Authentication activity</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sing in</string>
+</resources>

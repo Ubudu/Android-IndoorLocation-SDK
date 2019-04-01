@@ -18,6 +18,23 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">3.0.0</td>
+<td align="left">2019-04-01</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Features added:</p>
+<ul>
+<li>UWB TWR mode via BLE connection to the tag</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>no position at start when GPS register/unregister loop happens (e.g. near windows)</li>
+<li>Adjustments for Android 8</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">2.12.0</td>
 <td align="left">2018-02-19</td>
 <td align="left">MG</td>

@@ -1,0 +1,38 @@
+<LinearLayout android:orientation="vertical"
+    android:id="@+id/user_calibration_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="@color/colorPrimary"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/attractor_rssi_difference_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/attractor_rssi_threshold_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dsb_indicatorColor="@color/colorAccent"
+        app:dsb_progressColor="@color/colorAccent"
+        app:dsb_min="0"
+        app:dsb_max="40" />
+
+    <TextView
+        android:id="@+id/attractor_checks_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/attractor_checks_count_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dsb_indicatorColor="@color/colorAccent"
+        app:dsb_progressColor="@color/colorAccent"
+        app:dsb_min="0"
+        app:dsb_max="10" />
+
+</LinearLayout>

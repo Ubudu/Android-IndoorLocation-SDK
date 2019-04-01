@@ -1,0 +1,132 @@
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Preferences" >
+
+    <android.support.v7.preference.PreferenceCategory
+        android:key="account"
+        android:title="Ubudu account" >
+
+        <android.support.v7.preference.Preference
+            android:key="account_details"
+            android:summary="@string/summary_account_details"
+            android:title="@string/title_account_details" />
+
+        <android.support.v7.preference.Preference
+            android:key="applications_list"
+            android:summary="@string/summary_applications_list"
+            android:title="@string/title_applications_list" />
+
+        <android.support.v7.preference.Preference
+            android:key="logout"
+            android:title="@string/title_logout" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/title_general_settings" >
+
+        <android.support.v7.preference.Preference
+            android:key="change_application"
+            android:summary="@string/summary_change_application"
+            android:title="@string/title_change_application" />
+
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/title_analytics" >
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="monitor_beacon_batteries"
+            android:summary="@string/summary_report_battery_levels"
+            android:title="@string/title_report_battery_levels" />
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="log_position_history"
+            android:summary="@string/summary_log_position_history"
+            android:title="@string/title_log_position_history" />
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="log_position_real_time"
+            android:summary="@string/summary_log_position_real_time"
+            android:title="@string/title_log_position_real_time" />
+
+        <android.support.v7.preference.Preference
+            android:defaultValue=""
+            android:key="log_position_real_time_url"
+            android:summary="@string/summary_log_position_real_time_url"
+            android:title="@string/title_log_position_real_time_url" />
+
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/title_il_settings" >
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="true"
+            android:key="use_gps_provider"
+            android:summary="@string/summary_use_gps_provider"
+            android:title="@string/title_use_gps_provider" />
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="transition_zones_floor_switching"
+            android:summary="@string/summary_transition_zones_floor_switching"
+            android:title="@string/title_transition_zones_floor_switching" />
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="background_scanning"
+            android:summary="@string/summary_background_scanning"
+            android:title="@string/title_background_scanning" />
+
+        <android.support.v7.preference.Preference
+            android:key="operation_mode"
+            android:summary="@string/summary_operation_mode"
+            android:title="@string/title_operation_mode" />
+
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/title_map_settings" >
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="show_particles"
+            android:summary="@string/summary_show_particles"
+            android:title="@string/title_show_particles" />
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="show_beacons"
+            android:summary="@string/summary_detected_beacons"
+            android:title="@string/title_detected_beacons" />
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="false"
+            android:key="show_undetected_beacons"
+            android:summary="@string/summary_undetected_beacons"
+            android:title="@string/title_undetected_beacons" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/permissions" >
+
+        <android.support.v7.preference.Preference
+            android:key="geoloc_permission"
+            android:summary="@string/summary_geoloc_permission"
+            android:title="@string/title_geoloc_permission" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/title_app_infos" >
+        <android.support.v7.preference.Preference
+            android:key="app_version"
+            android:title="@string/title_app_version" />
+        <android.support.v7.preference.Preference
+            android:key="indoorlocation_sdk_version"
+            android:title="@string/title_indoorlocation_sdk_version" />
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

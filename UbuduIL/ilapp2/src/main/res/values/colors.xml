@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryLight">#11ffffff</color>
+    <color name="colorPrimaryDark">#616161</color>
+    <color name="colorAccent">#2399da</color>
+    <color name="colorAccent_transparent">#7D2399da</color>
+    <color name="colorAccentLight">#112399da</color>
+    <color name="button_off">#b1b1b1</color>
+
+    <color name="colorWarning">#C90019</color>
+    <color name="colorWarning_transparent">#7DC90019</color>
+    <color name="button_on">#7CBE31</color>
+    <color name="button_on_transparent">#7D7CBE31</color>
+    <color name="button_warning">#FF9300</color>
+    <color name="button_warning_transparent">#7DFF9300</color>
+
+    <color name="darkTextColor">#252525</color>
+    <color name="black_transparent">#993B4853</color>
+    <color name="fully_transparent">#00000000</color>
+    <color name="partially_transparent">#33ffffff</color>
+    <color name="colorLightBackground">#e6e6e6</color>
+
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorDivider">#44BDBDBD</color>
+    <color name="colorWhitenedText">#44757575</color>
+
+</resources>

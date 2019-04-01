@@ -1,0 +1,13 @@
+<resources>
+    <string-array name="namespace_input_type">
+        <item>Scan namespace QR code</item>
+        <item>Use Ubudu account</item>
+        <item>Type in namespace</item>
+    </string-array>
+
+    <string-array name="modes_of_operation">
+        <item>Stable</item>
+        <item>BLE corrective</item>
+        <item>Attractor</item>
+    </string-array>
+</resources>

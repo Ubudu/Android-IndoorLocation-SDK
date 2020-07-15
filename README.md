@@ -1,4 +1,4 @@
-# Android-IndoorLocation-SDK - v3.0.0
+# Android-IndoorLocation-SDK - v3.0.4
 
 **All info regarding adding the `Ubudu Indoor Location SDK` to a host application along with necessary project configuration can be found in the [Wiki](https://github.com/Ubudu/Android-IndoorLocation-SDK/wiki).**
 
@@ -22,4 +22,4 @@ More docs can be found in the Ubudu Knowledge Base website:
 
 ## Legal status:
 
-Copyright ©2016 Ubudu SAS, All right reserved.
+Copyright ©2020 Ubudu SAS, All right reserved.

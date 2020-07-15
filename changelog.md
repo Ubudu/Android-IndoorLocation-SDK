@@ -18,6 +18,23 @@
 <tbody>
 
 <tr class="odd">
+<td align="left">3.0.4</td>
+<td align="left">2020-07-15</td>
+<td align="left">MG</td>
+<td align="left">
+<p>Improvements:</p>
+<ul>
+<li>GPS switching tweaks so initial position is as accurate as possible</li>
+<li>migrate to androidx</li>
+</ul>
+<p>Issues addressed:</p>
+<ul>
+<li>fixed BLE scanning issues</li>
+</ul>
+</td>
+</tr>
+
+<tr class="odd">
 <td align="left">3.0.0</td>
 <td align="left">2019-04-01</td>
 <td align="left">MG</td>

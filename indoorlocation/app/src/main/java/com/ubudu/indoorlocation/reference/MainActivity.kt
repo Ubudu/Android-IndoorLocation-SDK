@@ -13,7 +13,7 @@ import java.lang.Error
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        const val REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION = 1
+        const val REQUEST_CODE_PERMISSION_LOCATION = 1
     }
 
     private lateinit var indoorLocationProvider: MyIndoorLocationProvider
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION)
+            this.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_PERMISSION_LOCATION)
         } else {
             indoorLocationProvider.start()
         }
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
-        if (requestCode == REQUEST_CODE_PERMISSION_ACCESS_FINE_LOCATION) {
+        if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 indoorLocationProvider.start()
             }

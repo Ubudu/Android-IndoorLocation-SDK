@@ -26,6 +26,11 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
 
         mIndoorLocationManager = UbuduIndoorLocationSDK.getSharedInstance(context).indoorLocationManager
 
+        mIndoorLocationManager.setBackgroundOperationEnabled(
+            true,
+            BackgroundNotification.getForegroundServiceNotification(context)
+        )
+
         mIndoorLocationManager.setCanUseGPSLocationProvider(true)
         mIndoorLocationManager.setModeOfOperation(Configuration.MODE_STABLE)
         mIndoorLocationManager.setIndoorLocationDelegate(this)

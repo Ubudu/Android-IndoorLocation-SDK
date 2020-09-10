@@ -3,12 +3,12 @@ package com.ubudu.indoorlocation.reference
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import io.indoorlocation.core.IndoorLocation
 import io.indoorlocation.core.IndoorLocationProviderListener
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Error
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,8 +43,32 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_PERMISSION_LOCATION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            && ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            val permissions: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.FOREGROUND_SERVICE,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                )
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.FOREGROUND_SERVICE
+                    )
+                } else {
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                }
+            }
+            requestPermissions(permissions, REQUEST_CODE_PERMISSION_LOCATION)
         } else {
             indoorLocationProvider.start()
         }

@@ -27,7 +27,7 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
         mIndoorLocationManager = UbuduIndoorLocationSDK.getSharedInstance(context).indoorLocationManager
 
         mIndoorLocationManager.setBackgroundOperationEnabled(
-            true,
+            false,
             BackgroundNotification.getForegroundServiceNotification(context)
         )
 
@@ -35,6 +35,10 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
         mIndoorLocationManager.setModeOfOperation(Configuration.MODE_STABLE)
         mIndoorLocationManager.setIndoorLocationDelegate(this)
         mIndoorLocationManager.setParticleFilterSpread(0.6,0.5)
+
+        mIndoorLocationManager.setRangedBeaconsNotifier {
+            Log.i(TAG,"detected beacons count ${it.size}")
+        }
 
         mIndoorLocationManager.setCompassListener {
             indoorLocation.bearing = it

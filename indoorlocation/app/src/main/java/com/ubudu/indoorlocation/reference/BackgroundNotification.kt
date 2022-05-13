@@ -36,9 +36,13 @@ object BackgroundNotification {
         builder.setSmallIcon(R.drawable.ic_launcher_background)
         builder.setContentTitle("Ubudu IL background beacons scanning...")
         val intent = Intent(context, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-                context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
+
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        } else {
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        }
+
         builder.setContentIntent(pendingIntent)
         return builder.build()
     }

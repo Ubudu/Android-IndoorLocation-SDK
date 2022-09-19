@@ -15,7 +15,7 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
         const val UBUDU_APP_NAMESPACE = "bb80ac3a01b73f039fdd0155f0b06d0cc1996742"
     }
 
-    private lateinit var mIndoorLocationManager: UbuduIndoorLocationManager
+    private val mIndoorLocationManager: UbuduIndoorLocationManager = UbuduIndoorLocationSDK.getSharedInstance(context).indoorLocationManager
     private val indoorLocation: IndoorLocation = IndoorLocation(TAG,0.0,0.0,0.0,System.currentTimeMillis())
 
     override fun supportsFloor(): Boolean {
@@ -23,8 +23,6 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
     }
 
     override fun start() {
-
-        mIndoorLocationManager = UbuduIndoorLocationSDK.getSharedInstance(context).indoorLocationManager
 
         mIndoorLocationManager.setBackgroundOperationEnabled(
             false,
@@ -35,6 +33,9 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
         mIndoorLocationManager.setModeOfOperation(Configuration.MODE_STABLE)
         mIndoorLocationManager.setIndoorLocationDelegate(this)
         mIndoorLocationManager.setParticleFilterSpread(0.6,0.5)
+
+        mIndoorLocationManager.setBackgroundBetweenScanPeriod(10000)
+        mIndoorLocationManager.setBackgroundScanPeriod(5000)
 
         mIndoorLocationManager.setRangedBeaconsNotifier {
             Log.i(TAG,"detected beacons count ${it.size}")
@@ -147,5 +148,13 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
                 it.onIndoorLocationChange(indoorLocation)
             }
         }
+    }
+
+    fun onPause() {
+        mIndoorLocationManager.unbind()
+    }
+
+    fun onResume() {
+        mIndoorLocationManager.bind()
     }
 }

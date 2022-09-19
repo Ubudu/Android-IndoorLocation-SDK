@@ -18,6 +18,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var indoorLocationProvider: MyIndoorLocationProvider
 
+    override fun onPause() {
+        indoorLocationProvider.onPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        indoorLocationProvider.onResume()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,7 +60,15 @@ class MainActivity : AppCompatActivity() {
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            val permissions: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val permissions: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.FOREGROUND_SERVICE,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.FOREGROUND_SERVICE,
@@ -76,6 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 indoorLocationProvider.start()
@@ -85,5 +104,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun appendLog(log: String) {
         illogs.text = "${illogs.text }\n$log"
+        if(illogs.text.length > 1000) {
+            illogs.text.substring(illogs.text.indexOf('\n')+1);
+        }
     }
 }

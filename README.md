@@ -22,4 +22,4 @@ More docs can be found in the Ubudu Knowledge Base website:
 
 ## Legal status:
 
-Copyright ©2020 Ubudu SAS, All right reserved.
+Copyright ©2022 Ubudu SAS, All right reserved.

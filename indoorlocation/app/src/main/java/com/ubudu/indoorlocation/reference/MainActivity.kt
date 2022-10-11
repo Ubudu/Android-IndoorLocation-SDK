@@ -54,11 +54,16 @@ class MainActivity : AppCompatActivity() {
         })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && ContextCompat.checkSelfPermission(
+            && (ContextCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
-            != PackageManager.PERMISSION_GRANTED
+            != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.BLUETOOTH_SCAN
+            )
+            != PackageManager.PERMISSION_GRANTED)
         ) {
             val permissions: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 arrayOf(

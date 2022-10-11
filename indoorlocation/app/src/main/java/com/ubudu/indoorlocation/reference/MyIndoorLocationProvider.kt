@@ -116,6 +116,7 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
     }
 
     override fun beaconsUpdated(beacons: MutableList<ILBeacon>?) {
+        Log.d(TAG,"beaconsUpdated: beacons count ${beacons?.size}")
     }
 
     override fun zonesChanged(zones: MutableList<UbuduZone>?) {

@@ -29,10 +29,11 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
             BackgroundNotification.getForegroundServiceNotification(context)
         )
 
-        mIndoorLocationManager.setCanUseGPSLocationProvider(true)
-        mIndoorLocationManager.setModeOfOperation(Configuration.MODE_STABLE)
+        mIndoorLocationManager.setRssiThreshold(-95)
+        mIndoorLocationManager.setAccuracyThreshold(30)
+        mIndoorLocationManager.setModeOfOperation(Configuration.MODE_BLE_CORRECTIVE)
         mIndoorLocationManager.setIndoorLocationDelegate(this)
-        mIndoorLocationManager.setParticleFilterSpread(0.6,0.5)
+        mIndoorLocationManager.setParticleFilterSpread(0.3,0.15)
 
         mIndoorLocationManager.setBackgroundBetweenScanPeriod(10000)
         mIndoorLocationManager.setBackgroundScanPeriod(5000)

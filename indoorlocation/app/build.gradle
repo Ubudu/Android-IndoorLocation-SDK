@@ -69,7 +69,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation("androidx.multidex:multidex:2.0.1")
 
-    implementation('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:3.0.17@aar') {
+    implementation('com.ubudu.indoorlocation:ubudu-indoor-location-sdk:3.0.18@aar') {
         transitive = true
     }
 

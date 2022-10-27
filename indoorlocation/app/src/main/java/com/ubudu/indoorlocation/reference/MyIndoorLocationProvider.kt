@@ -29,14 +29,66 @@ class MyIndoorLocationProvider(private val context: Context) : IndoorLocationPro
             BackgroundNotification.getForegroundServiceNotification(context)
         )
 
+        mIndoorLocationManager.setIndoorLocationDelegate(this)
+
         mIndoorLocationManager.setRssiThreshold(-95)
         mIndoorLocationManager.setAccuracyThreshold(30)
-        mIndoorLocationManager.setModeOfOperation(Configuration.MODE_BLE_CORRECTIVE)
-        mIndoorLocationManager.setIndoorLocationDelegate(this)
         mIndoorLocationManager.setParticleFilterSpread(0.3,0.15)
 
-        mIndoorLocationManager.setBackgroundBetweenScanPeriod(10000)
-        mIndoorLocationManager.setBackgroundScanPeriod(5000)
+        mIndoorLocationManager.configuration = object : Configuration {
+
+            val configuration = ModeStableConfiguration()
+
+            /**
+             * @return millisecond timeout after which the beacon is forgotten if no new advertising arrived
+             */
+            override fun getBeaconTimeout(): Long {
+                return configuration.beaconTimeout
+            }
+
+            /**
+             * @return minimum number of beacons to compute a position. Default is 1.
+             */
+            override fun getMinNumberOfBeaconsForComputation(): Int {
+                return configuration.minNumberOfBeaconsForComputation
+            }
+
+            /**
+             * @return number of position computations that must be consecutively farer than getImprobableJump() meters from the last position in order to have the filtered position be moved to the new raw position. This is to prevent the position getting stuck in weird places like e.g. corners of non navigable zones.
+             */
+            override fun getHoldOffCounterMax(): Int {
+                return configuration.holdOffCounterMax
+            }
+
+            /**
+             * @return the meters distance between the filtered position and raw position which triggers immediate reset of the filtered position into the raw position
+             */
+            override fun getImprobableDistanceBetweenFilteredUpdateAndBleUpdate(): Double {
+                return configuration.improbableDistanceBetweenFilteredUpdateAndBleUpdate
+            }
+
+            /**
+             * @return improbable position change in meters (a distance between previous position and new position).
+             */
+            override fun getImprobableJump(): Double {
+                return configuration.improbableJump
+            }
+
+            /**
+             * @return max GPS error reported by Android API below which GPS can be used (if BLE positioning is not possible)
+             */
+            override fun getMaxGpsError(): Double {
+                return configuration.maxGpsError
+            }
+
+            /**
+             * @return if true then attractor mode will be used, meaning that positions will be only computed at coordinates of the closest beacon.
+             */
+            override fun getAttractorModeFlag(): Boolean {
+                return configuration.attractorModeFlag
+            }
+
+        }
 
         mIndoorLocationManager.setRangedBeaconsNotifier {
             Log.i(TAG,"detected beacons count ${it.size}")
